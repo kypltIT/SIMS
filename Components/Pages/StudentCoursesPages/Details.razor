@@ -1,0 +1,53 @@
+﻿@page "/studentcourses/details"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>StudentCourses</h4>
+    <hr />
+    @if (studentcourses is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Grade</dt>
+            <dd class="col-sm-10">@studentcourses.Grade</dd>
+            <dt class="col-sm-2">Note</dt>
+            <dd class="col-sm-10">@studentcourses.Note</dd>
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@studentcourses.UserId</dd>
+            <dt class="col-sm-2">CourseId</dt>
+            <dd class="col-sm-10">@studentcourses.CourseId</dd>
+        </dl>
+        <div>
+            <a href="@($"/studentcourses/edit?id={studentcourses.Id}")">Edit</a> |
+            <a href="@($"/studentcourses")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    StudentCourses? studentcourses;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        studentcourses = await context.StudentCourses.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (studentcourses is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

@@ -1,0 +1,61 @@
+﻿@page "/studentcourses/create"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>StudentCourses</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="StudentCourses" OnValidSubmit="AddStudentCourses" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="grade" class="form-label">Grade:</label> 
+                <InputNumber id="grade" @bind-Value="StudentCourses.Grade" class="form-control" /> 
+                <ValidationMessage For="() => StudentCourses.Grade" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="note" class="form-label">Note:</label> 
+                <InputText id="note" @bind-Value="StudentCourses.Note" class="form-control" /> 
+                <ValidationMessage For="() => StudentCourses.Note" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="userid" class="form-label">UserId:</label> 
+                <InputNumber id="userid" @bind-Value="StudentCourses.UserId" class="form-control" /> 
+                <ValidationMessage For="() => StudentCourses.UserId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="courseid" class="form-label">CourseId:</label> 
+                <InputNumber id="courseid" @bind-Value="StudentCourses.CourseId" class="form-control" /> 
+                <ValidationMessage For="() => StudentCourses.CourseId" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/studentcourses">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public StudentCourses StudentCourses { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddStudentCourses()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.StudentCourses.Add(StudentCourses);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/studentcourses");
+    }
+}

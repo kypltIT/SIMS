@@ -14,5 +14,6 @@ namespace SIMS.Data
         public DbSet<SIMS.Models.Genders> Genders { get; set; } = default!;
         public DbSet<SIMS.Models.Users> Users { get; set; } = default!;
         public DbSet<SIMS.Models.Courses> Courses { get; set; } = default!;
+        public DbSet<SIMS.Models.StudentCourses> StudentCourses { get; set; } = default!;
     }
 }

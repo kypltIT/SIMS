@@ -1,0 +1,105 @@
+﻿@page "/StudentCourses/edit"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>StudentCourses</h4>
+<hr />
+@if (StudentCourses is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="StudentCourses" OnValidSubmit="UpdateStudentCourses" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="StudentCourses.Id" value="@StudentCourses.Id" />
+                <div class="mb-3">
+                    <label for="grade" class="form-label">Grade:</label>
+                    <InputNumber id="grade" @bind-Value="StudentCourses.Grade" class="form-control" />
+                    <ValidationMessage For="() => StudentCourses.Grade" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="note" class="form-label">Note:</label>
+                    <InputText id="note" @bind-Value="StudentCourses.Note" class="form-control" />
+                    <ValidationMessage For="() => StudentCourses.Note" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="StudentCourses.UserId" class="form-control" />
+                    <ValidationMessage For="() => StudentCourses.UserId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="courseid" class="form-label">CourseId:</label>
+                    <InputNumber id="courseid" @bind-Value="StudentCourses.CourseId" class="form-control" />
+                    <ValidationMessage For="() => StudentCourses.CourseId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/studentcourses">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public StudentCourses? StudentCourses { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        StudentCourses ??= await context.StudentCourses.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (StudentCourses is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateStudentCourses()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(StudentCourses!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!StudentCoursesExists(StudentCourses!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/studentcourses");
+    }
+
+    bool StudentCoursesExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.StudentCourses.Any(e => e.Id == id);
+    }
+}
