@@ -1,0 +1,35 @@
+﻿@page "/users"
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="users/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DbFactory.CreateDbContext().Users">
+    <PropertyColumn Property="users => users.Code" />
+    <PropertyColumn Property="users => users.FirstName" />
+    <PropertyColumn Property="users => users.LastName" />
+    <PropertyColumn Property="users => users.Email" />
+    <PropertyColumn Property="users => users.Password" />
+    <PropertyColumn Property="users => users.RoleId" />
+    <PropertyColumn Property="users => users.DoB" />
+    <PropertyColumn Property="users => users.Address" />
+    <PropertyColumn Property="users => users.GenderId" />
+    <PropertyColumn Property="users => users.Phone" />
+    <PropertyColumn Property="users => users.MajorId" />
+    <PropertyColumn Property="users => users.IntialAdmissionCourse" />
+
+    <TemplateColumn Context="users">
+        <a href="@($"users/edit?id={users.Id}")">Edit</a> |
+        <a href="@($"users/details?id={users.Id}")">Details</a> |
+        <a href="@($"users/delete?id={users.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>

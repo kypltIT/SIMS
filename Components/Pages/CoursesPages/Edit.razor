@@ -1,0 +1,115 @@
+﻿@page "/Courses/edit"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Courses</h4>
+<hr />
+@if (Courses is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Courses" OnValidSubmit="UpdateCourses" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Courses.Id" value="@Courses.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Courses.Name" class="form-control" />
+                    <ValidationMessage For="() => Courses.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="startdate" class="form-label">StartDate:</label>
+                    <InputDate id="startdate" @bind-Value="Courses.StartDate" class="form-control" />
+                    <ValidationMessage For="() => Courses.StartDate" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="enddate" class="form-label">EndDate:</label>
+                    <InputDate id="enddate" @bind-Value="Courses.EndDate" class="form-control" />
+                    <ValidationMessage For="() => Courses.EndDate" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="semesterid" class="form-label">SemesterId:</label>
+                    <InputNumber id="semesterid" @bind-Value="Courses.SemesterId" class="form-control" />
+                    <ValidationMessage For="() => Courses.SemesterId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="Courses.UserId" class="form-control" />
+                    <ValidationMessage For="() => Courses.UserId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="subjectid" class="form-label">SubjectId:</label>
+                    <InputNumber id="subjectid" @bind-Value="Courses.SubjectId" class="form-control" />
+                    <ValidationMessage For="() => Courses.SubjectId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/courses">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Courses? Courses { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Courses ??= await context.Courses.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Courses is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateCourses()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Courses!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!CoursesExists(Courses!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/courses");
+    }
+
+    bool CoursesExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Courses.Any(e => e.Id == id);
+    }
+}

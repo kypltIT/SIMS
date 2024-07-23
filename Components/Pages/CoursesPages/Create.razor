@@ -1,0 +1,71 @@
+﻿@page "/courses/create"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>Courses</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Courses" OnValidSubmit="AddCourses" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="Courses.Name" class="form-control" /> 
+                <ValidationMessage For="() => Courses.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="startdate" class="form-label">StartDate:</label> 
+                <InputDate id="startdate" @bind-Value="Courses.StartDate" class="form-control" /> 
+                <ValidationMessage For="() => Courses.StartDate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="enddate" class="form-label">EndDate:</label> 
+                <InputDate id="enddate" @bind-Value="Courses.EndDate" class="form-control" /> 
+                <ValidationMessage For="() => Courses.EndDate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="semesterid" class="form-label">SemesterId:</label> 
+                <InputNumber id="semesterid" @bind-Value="Courses.SemesterId" class="form-control" /> 
+                <ValidationMessage For="() => Courses.SemesterId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="userid" class="form-label">UserId:</label> 
+                <InputNumber id="userid" @bind-Value="Courses.UserId" class="form-control" /> 
+                <ValidationMessage For="() => Courses.UserId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="subjectid" class="form-label">SubjectId:</label> 
+                <InputNumber id="subjectid" @bind-Value="Courses.SubjectId" class="form-control" /> 
+                <ValidationMessage For="() => Courses.SubjectId" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/courses">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Courses Courses { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddCourses()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Courses.Add(Courses);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/courses");
+    }
+}

@@ -1,0 +1,29 @@
+﻿@page "/courses"
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="courses/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DbFactory.CreateDbContext().Courses">
+    <PropertyColumn Property="courses => courses.Name" />
+    <PropertyColumn Property="courses => courses.StartDate" />
+    <PropertyColumn Property="courses => courses.EndDate" />
+    <PropertyColumn Property="courses => courses.SemesterId" />
+    <PropertyColumn Property="courses => courses.UserId" />
+    <PropertyColumn Property="courses => courses.SubjectId" />
+
+    <TemplateColumn Context="courses">
+        <a href="@($"courses/edit?id={courses.Id}")">Edit</a> |
+        <a href="@($"courses/details?id={courses.Id}")">Details</a> |
+        <a href="@($"courses/delete?id={courses.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>

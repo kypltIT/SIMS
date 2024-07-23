@@ -1,0 +1,69 @@
+﻿@page "/users/details"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Users</h4>
+    <hr />
+    @if (users is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Code</dt>
+            <dd class="col-sm-10">@users.Code</dd>
+            <dt class="col-sm-2">FirstName</dt>
+            <dd class="col-sm-10">@users.FirstName</dd>
+            <dt class="col-sm-2">LastName</dt>
+            <dd class="col-sm-10">@users.LastName</dd>
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@users.Email</dd>
+            <dt class="col-sm-2">Password</dt>
+            <dd class="col-sm-10">@users.Password</dd>
+            <dt class="col-sm-2">RoleId</dt>
+            <dd class="col-sm-10">@users.RoleId</dd>
+            <dt class="col-sm-2">DoB</dt>
+            <dd class="col-sm-10">@users.DoB</dd>
+            <dt class="col-sm-2">Address</dt>
+            <dd class="col-sm-10">@users.Address</dd>
+            <dt class="col-sm-2">GenderId</dt>
+            <dd class="col-sm-10">@users.GenderId</dd>
+            <dt class="col-sm-2">Phone</dt>
+            <dd class="col-sm-10">@users.Phone</dd>
+            <dt class="col-sm-2">MajorId</dt>
+            <dd class="col-sm-10">@users.MajorId</dd>
+            <dt class="col-sm-2">IntialAdmissionCourse</dt>
+            <dd class="col-sm-10">@users.IntialAdmissionCourse</dd>
+        </dl>
+        <div>
+            <a href="@($"/users/edit?id={users.Id}")">Edit</a> |
+            <a href="@($"/users")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Users? users;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        users = await context.Users.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (users is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
