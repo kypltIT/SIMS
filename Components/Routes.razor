@@ -1,11 +1,11 @@
 ﻿@using SIMS.Components.Account.Shared
 <Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
-        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.LoginLayout)"/>
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)"/>
     </Found>
     <NotFound>
         <CascadingAuthenticationState>
-          <LayoutView Layout="@typeof(Layout.LoginLayout)">
+          <LayoutView Layout="@typeof(Layout.MainLayout)">
           </LayoutView>
         </CascadingAuthenticationState>
    </NotFound>
