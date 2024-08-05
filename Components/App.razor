@@ -23,26 +23,28 @@
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
-    <script src="../assets/js/main.js"></script>
+    <script src="assets/js/main.js"></script>
     <script>
-        const togglePasswordButton = document.getElementById('toggle-password');
-        const passwordInput = document.getElementById('password-input');
-        const iconEyeOffPath = "m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z";
-        const iconEyePath = "M9.06 3C4 3 1 9 1 9s3 6 8.06 6C14 15 17 9 17 9s-3-6-7.94-6M9 13a4 4 0 1 1 0-8 4 4 0 0 1 0 8m0-2a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2";
+        document.querySelectorAll('.toggle-password').forEach(togglePasswordButton => {
+            const passwordInput = togglePasswordButton.previousElementSibling;
+            const iconEyeOffPath = "m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z";
+            const iconEyePath = "M9.06 3C4 3 1 9 1 9s3 6 8.06 6C14 15 17 9 17 9s-3-6-7.94-6M9 13a4 4 0 1 1 0-8 4 4 0 0 1 0 8m0-2a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2";
 
-        togglePasswordButton.addEventListener('click', function () {
-            const icon = togglePasswordButton.querySelector('svg');
-            const path = icon.querySelector('path');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.replace('iconEyeOff', 'iconEye');
-                path.setAttribute('d', iconEyePath);
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.replace('iconEye', 'iconEyeOff');
-                path.setAttribute('d', iconEyeOffPath);
-            }
+            togglePasswordButton.addEventListener('click', function () {
+                const icon = togglePasswordButton.querySelector('svg');
+                const path = icon.querySelector('path');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.replace('iconEyeOff', 'iconEye');
+                    path.setAttribute('d', iconEyePath);
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.replace('iconEye', 'iconEyeOff');
+                    path.setAttribute('d', iconEyeOffPath);
+                }
+            });
         });
+
     </script>
 </body>
 
