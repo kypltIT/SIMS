@@ -237,22 +237,6 @@ namespace SIMS.Migrations
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("SIMS.Models.Genders", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Genders");
-                });
 
             modelBuilder.Entity("SIMS.Models.Majors", b =>
                 {
@@ -276,22 +260,6 @@ namespace SIMS.Migrations
                     b.ToTable("Majors");
                 });
 
-            modelBuilder.Entity("SIMS.Models.Roles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
 
             modelBuilder.Entity("SIMS.Models.Semesters", b =>
                 {
