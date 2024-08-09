@@ -1,0 +1,24 @@
+﻿@page "/statuses"
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="statuses/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DbFactory.CreateDbContext().Status">
+    <PropertyColumn Property="status => status.Name" />
+
+    <TemplateColumn Context="status">
+        <a href="@($"statuses/edit?id={status.Id}")">Edit</a> |
+        <a href="@($"statuses/details?id={status.Id}")">Details</a> |
+        <a href="@($"statuses/delete?id={status.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>

@@ -1,0 +1,46 @@
+﻿@page "/statuses/create"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>Status</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Status" OnValidSubmit="AddStatus" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="Status.Name" class="form-control" /> 
+                <ValidationMessage For="() => Status.Name" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/statuses">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Status Status { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddStatus()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Status.Add(Status);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/statuses");
+    }
+}

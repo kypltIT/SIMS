@@ -12,5 +12,6 @@ namespace SIMS.Data
         public DbSet<SIMS.Models.Majors> Majors { get; set; } = default!;
         public DbSet<SIMS.Models.Subjects> Subjects { get; set; } = default!;
         public DbSet<SIMS.Models.Genders> Genders { get; set; } = default!;
+        public DbSet<SIMS.Models.Status> Status { get; set; } = default!;
     }
 }
