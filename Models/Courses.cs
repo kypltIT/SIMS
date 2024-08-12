@@ -1,4 +1,7 @@
-﻿namespace SIMS.Models
+﻿using SIMS.Data;
+
+namespace SIMS.Models
+
 {
     public class Courses
     {
@@ -9,9 +12,14 @@
         public DateTime EndDate { get; set; }
         public int SemesterId { get; set; }
         public Semesters Semester { get; set; }
-        public int UserId { get; set; }
-        public Users User { get; set; }
+        public string LecturerId { get; set; }
+        public ApplicationUser Lecture { get; set; }
         public int SubjectId { get; set; }
         public Subjects Subject { get; set; }
+
+        public string Code { get; set; }
+        public string Status { get; set; }
+
+
     }
 }

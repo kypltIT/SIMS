@@ -1,11 +1,12 @@
-﻿@layout RegisterLayout
-@page "/Account/Register"
+﻿@layout LoginLayout
+@page "/Register"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.EntityFrameworkCore
 @using SIMS.Components.Layout
 @using SIMS.Data
 
@@ -17,7 +18,110 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Register</PageTitle>
+
+<!-- Main content -->
+<div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
+    <div class="flex h-full max-w-xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-700">
+        <div class="flex flex-col overflow-y-auto">
+
+            <!-- Information Form -->
+            <div class="flex-1 items-center justify-center p-6">
+                <div class="w-full">
+                    <h1 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-200 text-center">
+                        Student Information
+                    </h1>
+                    <div class="text-xs text-gray-700 dark:text-gray-200">
+                        This form must be completed for all new students who are registering in a BTEC FPT British College (BTEC FPT)
+                    </div>
+
+
+
+                    <!-- Name -->
+                    <label class="block mt-4 text-sm">
+                        <div class="flex">
+                            <div class="mr-2">
+                                <span class="text-gray-700 dark:text-gray-400">First Name</span>
+                                <input class=" w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                       placeholder="Jane" />
+                            </div>
+                            <div class="">
+                                <span class="text-gray-700 dark:text-gray-400">Last Name</span>
+                                <input class=" w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                       placeholder="Doe" />
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- Phone -->
+                    <label class="block mt-4 text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Phone</span>
+                        <input class="flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                               placeholder="03** *** ***" />
+                    </label>
+
+                    <!-- Password -->
+                    <label class="block mt-4 text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Password</span>
+                        <div class="relative">
+                            <input class="flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300 dark:hover:border-gray-500"
+                                   placeholder="***************" type="password" id="password-input" />
+                            <button type="button"
+                                    class="button show-hide-password absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-auto toggle-password">
+                                <svg aria-hidden="true" class="svg-icon iconEyeOff dark:text-white" width="18" height="18"
+                                     viewBox="0 0 18 18">
+                                    <path d="m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </label>
+
+                    <!-- Confirm Password -->
+                    <label class="block mt-4 text-sm">
+                        <span class="text-gray-700 dark:text-gray-400">Confirm Password</span>
+                        <div class="relative">
+                            <input class="flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300 dark:hover:border-gray-500"
+                                   placeholder="***************" type="password" id="confirm-password-input" />
+                            <button type="button"
+                                    class="button show-hide-password absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-auto toggle-password">
+                                <svg aria-hidden="true" class="svg-icon iconEyeOff dark:text-white" width="18" height="18"
+                                     viewBox="0 0 18 18">
+                                    <path d="m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </label>
+
+                    <!-- You should use a button here, as the anchor is only used for the example  -->
+                    <a class="block w-full px-4 py-2 mt-6 text-sm font-medium leading-5 text-center text-white transition-colors duration-300 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                       href="../dashboard-student.html">
+                        Sign up
+                    </a>
+
+                    <!-- Back button -->
+                    <a class="back-button flex items-center justify-center w-12 h-12 mt-6 mx-auto bg-purple-600 rounded text-white transition-colors duration-300 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                       href="login.html">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}
+
+@* <PageTitle>Register</PageTitle>
 
 <h1>Register</h1>
 
@@ -29,8 +133,24 @@
             <h2>Create a new account.</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
+
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" placeholder="Student's First Name" />
+                <label for="firstname">First Name</label>
+                <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.LastName" class="form-control" aria-required="true" placeholder="Student's Last Name" />
+                <label for="lastname">Last Name</label>
+                <ValidationMessage For="() => Input.LastName" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder=""/>
+                <label for="phonenumber">Phone Number</label>
+                <ValidationMessage For="() => Input.Email" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
                 <label for="email">Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
@@ -74,6 +194,10 @@
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+        // Generate the next student code
+        user.Code = await GenerateNextStudentCodeAsync();
+
         var result = await UserManager.CreateAsync(user, Input.Password);
 
         if (!result.Succeeded)
@@ -82,7 +206,7 @@
             return;
         }
 
-        Logger.LogInformation("User created a new account with password.");
+        Logger.LogInformation("User created a new account with password and student code: {StudentCode}", user.Code);
 
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
@@ -104,11 +228,46 @@
         RedirectManager.RedirectTo(ReturnUrl);
     }
 
+    private async Task<string> GenerateNextStudentCodeAsync()
+    {
+        // Retrieve the last student code from the database
+        var lastStudent = await UserManager.Users
+            .Where(u => u.Code.StartsWith("ST"))
+            .OrderByDescending(u => u.Code)
+            .FirstOrDefaultAsync();
+
+        string newStudentCode;
+        if (lastStudent == null)
+        {
+            // No student found, start with ST00001
+            newStudentCode = "ST00001";
+        }
+        else
+        {
+            // Extract the numeric part of the last student code
+            int lastCodeNumber = int.Parse(lastStudent.Code.Substring(2));
+            // Increment by 1
+            newStudentCode = $"ST{(lastCodeNumber + 1).ToString("D5")}";
+        }
+
+        return newStudentCode;
+    }
+
     private ApplicationUser CreateUser()
     {
         try
         {
-            return Activator.CreateInstance<ApplicationUser>();
+            return new ApplicationUser()
+                {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    PhoneNumber = Input.PhoneNumber,
+                    Role = "Student",
+                    Status = "Active",
+                    IntialAdmissionCourse = "K1",
+                
+                    // The Code will be assigned later in the RegisterUser method
+                };
         }
         catch
         {
@@ -129,6 +288,18 @@
     private sealed class InputModel
     {
         [Required]
+        [Display(Name = "FirstName")]
+        public string FirstName { get; set; } = "";
+
+        [Required]
+        [Display(Name = "LastName")]
+        public string LastName { get; set; } = "";
+
+        [Required]
+        [Display(Name = "PhoneNumber")]
+        public string PhoneNumber { get; set; } = "";
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; } = "";
@@ -145,3 +316,4 @@
         public string ConfirmPassword { get; set; } = "";
     }
 }
+ *@

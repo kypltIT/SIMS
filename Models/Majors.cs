@@ -7,5 +7,6 @@
         public string Name { get; set; }
         public int DepartmentId { get; set; }
         public Departments Department { get; set; }
+        public string Code { get; set; }
     }
 }
