@@ -20,105 +20,60 @@
 
 
 
-<!-- Main content -->
-<div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
-	<div class="flex-1 h-full max-w-xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-700">
-		<div class="flex flex-col overflow-y-auto">
-			<!-- Login Form -->
-			<div class="flex-1 items-center justify-center p-6">
-				<div class="w-full">
-					<h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
-						Login
-					</h1>
-					<StatusMessage Message="@errorMessage" />
-					<EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
-						<DataAnnotationsValidator />
-						<ValidationSummary class="text-danger" role="alert" />
+<PageTitle>Log in</PageTitle>
 
-						<!-- Email -->
-						<label class="block text-sm">
-							<span class="text-gray-700 dark:text-gray-400">Email</span>
-							<div class="relative">
-								<InputText @bind-Value="Input.Email" aria-required="true" class="form-control flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
-										   placeholder="janedoe123@gmail.com" />
-								<ValidationMessage For="() => Input.Email" class="text-danger" />
-							</div>
-						</label>
-						<!-- Password -->
-						<label class="block mt-4 text-sm">
-							<span class="text-gray-700 dark:text-gray-400">Password</span>
-							<div class="relative">
-								<InputText @bind-Value="Input.Password" class="form control flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300 dark:hover:border-gray-500"
-										   placeholder="***************"
-										   type="password"
-										   id="password-input" />
-								<button type="button" class="button show-hide-password absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-auto toggle-password" id="toggle-password">
-									<svg aria-hidden="true" class="svg-icon iconEyeOff dark:text-white" width="18" height="18" viewBox="0 0 18 18">
-										<path d="m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z"></path>
-									</svg>
-								</button>
-								<ValidationMessage For="() => Input.Password" class="text-danger" />
-							</div>
-						</label>
-
-						<!-- Remember me -->
-						<div class="flex mt-2 text-sm">
-							<label class="flex items-center dark:text-gray-400">
-								<InputCheckbox type="checkbox" @bind-Value="Input.RememberMe"
-											   class="darker-border-checkbox form-check-input text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" />
-								<span class="ml-2">
-									Remember me
-								</span>
-							</label>
-						</div>
-
-
-						<!-- Forgot Password -->
-						<p class="mt-4">
-							<a class="block text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-							   href="Account/ForgotPassword">
-								Forgot your password?
-							</a>
-						</p>
-
-						<!-- Login button  -->
-						<button type="submit" class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-300 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-							Log in
-						</button>
-					</EditForm>
-					<!-- OR -->
-					<h1 class="block divider text-gray-500 text-sm">OR</h1>
-
-					<!-- Sign in with Google -->
-					<a aria-hidden="true"
-					   class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition-colors duration-300 border border-gray-300 rounded-lg dark:text-gray-400 active:bg-transparent hover:border-purple-400 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray"
-					   href="/register">
-						<svg class="w-4 h-4 mr-2"
-							 aria-hidden="true"
-							 viewBox="0 0 24 24"
-							 fill="currentColor">
-							<img class="mr-2 block" src="../assets/img/google_icon.svg" alt="" style="width:6%; height:6%">
-						</svg>
-						Sign in with Google
-					</a>
+<h1>Log in</h1>
+<div class="row">
+	<div class="col-md-4">
+		<section>
+			<StatusMessage Message="@errorMessage" />
+			<EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+				<DataAnnotationsValidator />
+				<h2>Use a local account to log in.</h2>
+				<hr />
+				<ValidationSummary class="text-danger" role="alert" />
+				<div class="form-floating mb-3">
+					<InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+					<label for="email" class="form-label">Email</label>
+					<ValidationMessage For="() => Input.Email" class="text-danger" />
 				</div>
-			</div>
-		</div>
+				<div class="form-floating mb-3">
+					<InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+					<label for="password" class="form-label">Password</label>
+					<ValidationMessage For="() => Input.Password" class="text-danger" />
+				</div>
+				<div class="checkbox mb-3">
+					<label class="form-label">
+						<InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
+						Remember me
+					</label>
+				</div>
+				<div>
+					<button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+				</div>
+				<div>
+					<p>
+						<a href="Account/ForgotPassword">Forgot your password?</a>
+					</p>
+					<p>
+						<a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+					</p>
+					<p>
+						<a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+					</p>
+				</div>
+			</EditForm>
+		</section>
 	</div>
-
-
-
-	<!-- Image -->
-	<div class="block h-32 md:h-auto md:w-1/2 items-center pointer-events-none">
-		<img aria-hidden="true" class="object-cover dark:hidden pointer-events-none" src="../assets/img/login-office.png" style="display: block;
-      margin-left: auto;
-      margin-right: auto;
-      width: 70%;
-      pointer-events: none;"
-			 alt="Office" />
-		<h1 class="dark:text-white" style="text-align: center; font-weight: bold; font-size: 25px;">Student Information Management System</h1>
+	<div class="col-md-6 col-md-offset-2">
+		<section>
+			<h3>Use another service to log in.</h3>
+			<hr />
+			<ExternalLoginPicker />
+		</section>
 	</div>
 </div>
+
 
 @code {
 	private string? errorMessage;
