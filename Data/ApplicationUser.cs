@@ -11,14 +11,10 @@ namespace SIMS.Data
 		public string LastName { get; set; }
 	
 		public string Role { get; set; }
-		public DateTime DoB { get; set; }
-		public string Address { get; set; }
-		public string Gender { get; set; }
+/*		public DateTime DoB { get; set; }
+*//*		public string Address { get; set; }*/
+/*		public string Gender { get; set; }*/
 
-		public int Phone { get; set; }
-
-		public int MajorId { get; set; }
-		public Majors Major { get; set; }
 		public string IntialAdmissionCourse { get; set; }
 		public string Status { get; set; }
 	}
