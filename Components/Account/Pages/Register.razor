@@ -1,4 +1,4 @@
-﻿@layout LoginLayout
+﻿@layout RegisterLayout
 @page "/Account/Register"
 
 @using System.ComponentModel.DataAnnotations
@@ -19,7 +19,117 @@
 @inject IdentityRedirectManager RedirectManager
 
 
+<div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
+    <div class="flex h-full max-w-xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-700">
+        <div class="flex flex-col overflow-y-auto">
+            <div class="flex-1 items-center justify-center p-6">
+                <div class="w-full">
+                    <h1 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-200 text-center">
+                        Student Information
+                    </h1>
+                    <div class="text-xs text-gray-700 dark:text-gray-200">
+                        This form must be completed for all new students who are registering in a BTEC FPT British College (BTEC FPT)
+                    </div>
 
+                    <EditForm Model="Input" OnValidSubmit="RegisterUser" FormName="register">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" role="alert" />
+
+                        <!-- First Name -->
+                        <label class="block mt-4 text-sm">
+                            <div class="flex">
+                                <div class="mr-2 w-full">
+                                    <span class="text-gray-700 dark:text-gray-400">First Name</span>
+                                    <InputText @bind-Value="Input.FirstName"
+                                               class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                               placeholder="Jane" />
+                                    <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+                                </div>
+                                <div class="w-full">
+                                    <span class="text-gray-700 dark:text-gray-400">Last Name</span>
+                                    <InputText @bind-Value="Input.LastName"
+                                               class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                               placeholder="Doe" />
+                                    <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                                </div>
+                            </div>
+                        </label>
+
+                        <!-- Phone Number -->
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Phone Number</span>
+                            <InputText @bind-Value="Input.PhoneNumber"
+                                       class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                       placeholder="03** *** ***" />
+                            <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+                        </label>
+
+                        <!-- Email -->
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Email</span>
+                            <InputText @bind-Value="Input.Email"
+                                       class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                       placeholder="name@example.com" />
+                            <ValidationMessage For="() => Input.Email" class="text-danger" />
+                        </label>
+
+                        <!-- Password -->
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Password</span>
+                            <div class="relative">
+                                <InputText type="password" @bind-Value="Input.Password"
+                                           class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                           placeholder="***************" id="password-input" />
+                                <button type="button"
+                                        class="button show-hide-password absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-auto toggle-password">
+                                    <svg aria-hidden="true" class="svg-icon iconEyeOff dark:text-white" width="18" height="18"
+                                         viewBox="0 0 18 18">
+                                        <path d="m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z"></path>
+                                    </svg>
+                                </button>
+                                <ValidationMessage For="() => Input.Password" class="text-danger" />
+                            </div>
+                        </label>
+
+                        <!-- Confirm Password -->
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Confirm Password</span>
+                            <div class="relative">
+                                <InputText type="password" @bind-Value="Input.ConfirmPassword"
+                                           class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                           placeholder="***************" id="confirm-password-input" />
+                                <button type="button"
+                                        class="button show-hide-password absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-auto toggle-password">
+                                    <svg aria-hidden="true" class="svg-icon iconEyeOff dark:text-white" width="18" height="18"
+                                         viewBox="0 0 18 18">
+                                        <path d="m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z"></path>
+                                    </svg>
+                                </button>
+                                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                            </div>
+                        </label>
+
+                        <!-- Register Button -->
+                        <button type="submit" class="w-full px-4 py-2 mt-6 text-sm font-medium leading-5 text-center text-white transition-colors duration-300 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                            Register
+                        </button>
+
+                        <!-- Back Button -->
+                        <a class="flex items-center justify-center w-12 h-12 mt-6 mx-auto bg-purple-600 rounded text-white transition-colors duration-300 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" href="/">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </a>
+
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*
 <PageTitle>Register</PageTitle>
 
 <h1>Register</h1>
@@ -44,7 +154,7 @@
                 <ValidationMessage For="() => Input.LastName" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder=""/>
+                <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="" />
                 <label for="phonenumber">Phone Number</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
@@ -73,7 +183,7 @@
             <ExternalLoginPicker />
         </section>
     </div>
-</div>
+</div> *@
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
@@ -164,7 +274,7 @@
                     Role = "Student",
                     Status = "Active",
                     IntialAdmissionCourse = "K1",
-                
+
                     // The Code will be assigned later in the RegisterUser method
                 };
         }
