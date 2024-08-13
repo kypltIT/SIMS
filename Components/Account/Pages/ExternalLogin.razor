@@ -1,4 +1,5 @@
-﻿@page "/Account/ExternalLogin"
+﻿@layout ExternalLoginLayout
+@page "/Account/ExternalLogin"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
@@ -7,6 +8,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.EntityFrameworkCore
+@using SIMS.Components.Layout
 @using SIMS.Data
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -20,11 +22,9 @@
 <PageTitle>External Login</PageTitle>
 
 <StatusMessage Message="@message" />
-<h1>External Login</h1>
-<h2>Associate your @ProviderDisplayName account.</h2>
-<hr />
 
-<div class="alert alert-info">
+
+<div class="alert alert-info text-center ">
     You've successfully authenticated with <strong>@ProviderDisplayName</strong>.
     Please enter your details below and click the Register button to finish registering your account.
 </div>

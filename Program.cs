@@ -17,13 +17,6 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();  
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
-services.Configure<IdentityOptions>(options =>
-{
-    // Cấu hình khác
-    options.SignIn.RequireConfirmedAccount = false; // Đặt giá trị false để bỏ qua yêu cầu xác nhận email
-});
-
-
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = IdentityConstants.ApplicationScheme;
