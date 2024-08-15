@@ -7,11 +7,10 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
+<h1 class="text-center" style="color: #FF6600; font-weight: bold;">Edit Major</h1>
 
-<h4>Majors</h4>
 <hr />
-@if (Majors is null)
+@if (Majors is null || Departments is null)
 {
     <p><em>Loading...</em></p>
 }
@@ -29,8 +28,13 @@ else
                     <ValidationMessage For="() => Majors.Name" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="departmentid" class="form-label">DepartmentId:</label>
-                    <InputNumber id="departmentid" @bind-Value="Majors.DepartmentId" class="form-control" />
+                    <label for="department" class="form-label">Department:</label>
+                    <InputSelect id="department" @bind-Value="Majors.DepartmentId" class="form-control">
+                        @foreach (var department in Departments)
+                        {
+                            <option value="@department.Id">@department.Name</option>
+                        }
+                    </InputSelect>
                     <ValidationMessage For="() => Majors.DepartmentId" class="text-danger" />
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
@@ -50,6 +54,8 @@ else
     [SupplyParameterFromForm]
     public Majors? Majors { get; set; }
 
+    public List<Departments>? Departments { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
@@ -59,10 +65,10 @@ else
         {
             NavigationManager.NavigateTo("notfound");
         }
+
+        Departments = await context.Departments.ToListAsync();
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateMajors()
     {
         using var context = DbFactory.CreateDbContext();

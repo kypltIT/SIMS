@@ -1,11 +1,20 @@
+/* Ensure the body takes full viewport height */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Hide scrollbar on the body */
+}
+
 .page {
     position: relative;
     display: flex;
     flex-direction: column;
+    height: 100vh; /* Make the .page container full height */
 }
 
 main {
     flex: 1;
+    overflow-y: auto; /* Enable scrolling only on the main content area */
 }
 
 .sidebar {
@@ -19,6 +28,9 @@ main {
     height: 3.5rem;
     display: flex;
     align-items: center;
+    position: sticky; /* Fix the top row in place */
+    top: 0;
+    z-index: 1;
 }
 
     .top-row ::deep a, .top-row ::deep .btn-link {
@@ -27,23 +39,23 @@ main {
         text-decoration: none;
     }
 
-    .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-        text-decoration: underline;
-    }
+        .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
+            text-decoration: underline;
+        }
 
-    .top-row ::deep a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+        .top-row ::deep a:first-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
 @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;
     }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        margin-left: 0;
-    }
+        .top-row ::deep a, .top-row ::deep .btn-link {
+            margin-left: 0;
+        }
 }
 
 @media (min-width: 641px) {
@@ -64,11 +76,11 @@ main {
         z-index: 1;
     }
 
-    .top-row.auth ::deep a:first-child {
-        flex: 1;
-        text-align: right;
-        width: 0;
-    }
+        .top-row.auth ::deep a:first-child {
+            flex: 1;
+            text-align: right;
+            width: 0;
+        }
 
     .top-row, article {
         padding-left: 2rem !important;

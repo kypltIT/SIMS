@@ -5,20 +5,20 @@
 @using SIMS.Models
 @inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
 
-<PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1 class="text-center" style="color: #FF6600; font-weight: bold;">DEPARTMENT</h1>
 
-<p>
-    <a href="departments/create">Create New</a>
-</p>
-
+<a href="departments/create" class="btn-create">
+        <i class="fas fa-plus-circle"></i> Create New
+</a>
 <QuickGrid Class="table" Items="DbFactory.CreateDbContext().Departments">
     <PropertyColumn Property="departments => departments.Name" />
+   <TemplateColumn Context="departments">
+    <div style="text-align: right;">
+        <a href="@($"departments/edit?id={departments.Id}")"><i class="fa-solid fa-pen-to-square"></i></a> |
+        <a href="@($"departments/details?id={departments.Id}")"><i class="fa-solid fa-eye"></i></a> |
+        <a href="@($"departments/delete?id={departments.Id}")"><i class="fa-solid fa-delete-left"></i></a>
+    </div>
+</TemplateColumn>
 
-    <TemplateColumn Context="departments">
-        <a href="@($"departments/edit?id={departments.Id}")">Edit</a> |
-        <a href="@($"departments/details?id={departments.Id}")">Details</a> |
-        <a href="@($"departments/delete?id={departments.Id}")">Delete</a>
-    </TemplateColumn>
 </QuickGrid>

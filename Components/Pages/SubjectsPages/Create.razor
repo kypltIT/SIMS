@@ -7,9 +7,7 @@
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
-
-<h4>Subjects</h4>
+<h1 class="text-center" style="color: #FF6600; font-weight: bold;">Create New Subjects</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,14 +15,14 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="name" class="form-label">Name:</label>
-                <InputText id="name" @bind-Value="Subjects.Name" class="form-control" />
-                <ValidationMessage For="() => Subjects.Name" class="text-danger" />
+                <label for="name" class="form-label">Name :</label> 
+                <InputText id="name" @bind-Value="Subjects.Name" class="form-control" /> 
+                <ValidationMessage For="() => Subjects.Name" class="text-danger" /> 
             </div>
             <div class="mb-3">
-                <label for="majorid" class="form-label">MajorId:</label>
+                <label for="majorid" class="form-label">Major :</label>
                 <InputSelect id="majorid" @bind-Value="Subjects.MajorId" class="form-control">
-                    @foreach (var subject in Major)
+                    @foreach (var subject in Majors)
                     {
                         <option value="@subject.Id">@subject.Name</option>
                     }
@@ -33,10 +31,10 @@
                 </InputSelect>
             </div>
             <div class="mb-3">
-                <label for="code" class="form-label">Code:</label>
-                <InputText id="code" @bind-Value="Subjects.Code" class="form-control" />
-                <ValidationMessage For="() => Subjects.Code" class="text-danger" />
-            </div>
+                <label for="code" class="form-label">Code :</label> 
+                <InputText id="code" @bind-Value="Subjects.Code" class="form-control" /> 
+                <ValidationMessage For="() => Subjects.Code" class="text-danger" /> 
+            </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -45,18 +43,16 @@
 <div>
     <a href="/subjects">Back to List</a>
 </div>
-
 @code {
 
     [SupplyParameterFromForm]
     public Subjects Subjects { get; set; } = new();
-    public List<Majors> Major { get; set; } = new();
+    public List<Majors> Majors { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        Major = await context.Majors.ToListAsync();
+        Majors = await context.Majors.ToListAsync();
     }
-
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddSubjects()
     {
