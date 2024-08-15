@@ -5,6 +5,11 @@
     {
       "library": "font-awesome@6.6.0",
       "destination": "wwwroot/font-awesome/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "alpinejs@2.8.2",
+      "destination": "wwwroot/alpinejs/"
     }
   ]
 }

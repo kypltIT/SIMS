@@ -82,9 +82,17 @@
                     <h1 class="block divider text-gray-500 text-sm">OR</h1>
 
                     <!-- Sign in with Google -->
-                    <section class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-300 border border-gray-300 rounded-lg dark:text-gray-400 active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
-                        <ExternalLoginPicker />
-                    </section>
+                    <a aria-hidden="true"
+                       class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition-colors duration-300 border border-gray-300 rounded-lg dark:text-gray-400 active:bg-transparent hover:border-purple-400 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray"
+                       href="/register">
+                        <svg class="w-4 h-4 mr-2"
+                             aria-hidden="true"
+                             viewBox="0 0 24 24"
+                             fill="currentColor">
+                            <img class="mr-2 block" src="../assets/img/google_icon.svg" alt="" style="width:6%; height:6%">
+                        </svg>
+                        Sign in with Google
+                    </a>
                 </div>
             </div>
         </div>
@@ -101,61 +109,6 @@
         <h1 class="dark:text-white" style="text-align: center; font-weight: bold; font-size: 25px;">Student Information Management System</h1>
     </div>
 </div>
-
-
-@* <PageTitle>Log in</PageTitle>
-
-<h1>Log in</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <StatusMessage Message="@errorMessage" />
-            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
-                <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
-                <hr />
-                <ValidationSummary class="text-danger" role="alert" />
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label for="email" class="form-label">Email</label>
-                    <ValidationMessage For="() => Input.Email" class="text-danger" />
-                </div>
-                <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="password" class="form-label">Password</label>
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
-                </div>
-                <div class="checkbox mb-3">
-                    <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
-                    </label>
-                </div>
-                <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </EditForm>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
-</div> *@
 
 @code {
     private string? errorMessage;
