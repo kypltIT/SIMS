@@ -1,0 +1,109 @@
+﻿@page "/users/students/edit"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Data
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit Student</PageTitle>
+
+<h1>Edit Student</h1>
+
+@if (Student is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm method="post" Model="Student" OnValidSubmit="UpdateStudent" FormName="Edit" Enhance>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <input type="hidden" name="Student.Id" value="@Student.Id" />
+
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name:</label>
+            <InputText id="firstName" @bind-Value="Student.FirstName" class="form-control" />
+            <ValidationMessage For="() => Student.FirstName" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name:</label>
+            <InputText id="lastName" @bind-Value="Student.LastName" class="form-control" />
+            <ValidationMessage For="() => Student.LastName" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Phone Number:</label>
+            <InputText id="phoneNumber" @bind-Value="Student.PhoneNumber" class="form-control" />
+            <ValidationMessage For="() => Student.PhoneNumber" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <InputText id="email" @bind-Value="Student.Email" class="form-control" />
+            <ValidationMessage For="() => Student.Email" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="initialAdmissionCourse" class="form-label">Initial Admission Course:</label>
+            <InputText id="initialAdmissionCourse" @bind-Value="Student.IntialAdmissionCourse" class="form-control" />
+            <ValidationMessage For="() => Student.IntialAdmissionCourse" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status:</label>
+            <InputText id="status" @bind-Value="Student.Status" class="form-control" />
+            <ValidationMessage For="() => Student.Status" class="text-danger" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+}
+
+<div>
+    <a href="/users/students">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string Id { get; set; }
+
+    private ApplicationUser? Student { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Student ??= await context.ApplicationUser.FirstOrDefaultAsync(u => u.Id == Id);
+
+        if (Student is null)
+        {
+            NavigationManager.NavigateTo("/notfound");
+        }
+    }
+
+    public async Task UpdateStudent()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Student!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!StudentExists(Student!.Id))
+            {
+                NavigationManager.NavigateTo("/notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/users/students");
+    }
+
+    bool StudentExists(string id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.ApplicationUser.Any(e => e.Id == id);
+    }
+}

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIMS.Data;
 
@@ -11,9 +12,11 @@ using SIMS.Data;
 namespace SIMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240815041304_Courses")]
+    partial class Courses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -259,8 +262,8 @@ namespace SIMS.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LectureId")
-                        .HasColumnType("nvarchar(450)");
+/*                    b.Property<string>("LectureId")
+                        .HasColumnType("nvarchar(450)");*/
 
                     b.Property<string>("LecturerId")
                         .IsRequired()
@@ -285,7 +288,8 @@ namespace SIMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LectureId");
+                    /* b.HasIndex("LectureId")  */
+                    b.HasIndex("LecturerId");
 
                     b.HasIndex("SemesterId");
 
@@ -439,9 +443,9 @@ namespace SIMS.Migrations
 
             modelBuilder.Entity("SIMS.Models.Courses", b =>
                 {
-                    b.HasOne("SIMS.Data.ApplicationUser", "Lecture")
+                    b.HasOne("SIMS.Data.ApplicationUser", "Lecturer")
                         .WithMany()
-                        .HasForeignKey("LectureId");
+                        .HasForeignKey("LecturerId");
 
                     b.HasOne("SIMS.Models.Semesters", "Semester")
                         .WithMany()
@@ -455,7 +459,7 @@ namespace SIMS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Lecture");
+                    b.Navigation("Lecturer");
 
                     b.Navigation("Semester");
 

@@ -1,0 +1,37 @@
+﻿@page "/users/lecturers"
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Manage Students</PageTitle>
+
+<h1>Manage Students</h1>
+
+<p>
+    <a href="users/lecturers/create"><i class="fa-solid fa-square-plus"></i></a>
+</p>
+
+
+<QuickGrid Class="table"
+           Items='@(DbFactory.CreateDbContext().ApplicationUser.Where(s => s.Role.Equals("Lecturer")))'>
+
+    <PropertyColumn Property="lecturers => lecturers.Code" />
+    <PropertyColumn Property="lecturers => lecturers.FirstName" />
+    <PropertyColumn Property="lecturers => lecturers.LastName" />
+    <PropertyColumn Property="lecturers => lecturers.PhoneNumber" />
+    <PropertyColumn Property="lecturers => lecturers.Email" />
+    <PropertyColumn Property="lecturers => lecturers.Status" />
+    <PropertyColumn Property="lecturers => lecturers.Role" />
+    <TemplateColumn Context="users">
+        <a href="@($"users/edit?id={users.Id}")"><i class="fa-solid fa-pen-to-square"></i></a>
+        <a href="@($"users/delete?id={users.Id}")"><i class="fa-solid fa-trash"></i></a>
+    </TemplateColumn>
+</QuickGrid>
+@code
+{
+
+}

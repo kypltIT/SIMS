@@ -103,6 +103,31 @@
             }
         });
 
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const pagesMenuButton = document.querySelector('[data-action="toggle-pages-menu"]');
+            const highlightTrack = document.querySelector('#highlightTrack');
+            const pagesMenu = document.querySelector('#pagesMenu');
+
+            if (pagesMenuButton) {
+                pagesMenuButton.addEventListener('click', () => {
+                    // Toggle menu visibility
+                    if (pagesMenu) {
+                        pagesMenu.classList.toggle('hidden');
+                        pagesMenu.classList.toggle('max-h-0');
+                        pagesMenu.classList.toggle('opacity-0');
+                        pagesMenu.classList.toggle('opacity-100');
+                    }
+
+                    // Toggle highlight track
+                    if (highlightTrack) {
+                        highlightTrack.classList.toggle('hidden');
+                        highlightTrack.classList.toggle('w-1');
+                    }
+                });
+            }
+        });
+
     </script>
 </body>
 

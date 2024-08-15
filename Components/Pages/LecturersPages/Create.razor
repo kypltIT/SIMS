@@ -1,0 +1,110 @@
+﻿@page "/users/lecturers/create"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Data
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create Lecturer</PageTitle>
+
+<h1>Create Lecturer</h1>
+
+<h4>Lecturers</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Lecturer" OnValidSubmit="AddLecturer" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="firstName" class="form-label">First Name:</label>
+                <InputText id="firstName" @bind-Value="Lecturer.FirstName" class="form-control" />
+                <ValidationMessage For="() => Lecturer.FirstName" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Last Name:</label>
+                <InputText id="lastName" @bind-Value="Lecturer.LastName" class="form-control" />
+                <ValidationMessage For="() => Lecturer.LastName" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Phone Number:</label>
+                <InputText id="phoneNumber" @bind-Value="Lecturer.PhoneNumber" class="form-control" />
+                <ValidationMessage For="() => Lecturer.PhoneNumber" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <InputText id="email" @bind-Value="Lecturer.Email" class="form-control" />
+                <ValidationMessage For="() => Lecturer.Email" class="text-danger" />
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/users/lecturers">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public ApplicationUser Lecturer { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Initialize default values
+        Lecturer.Code = await GenerateNextLecturerCodeAsync();
+        Lecturer.IntialAdmissionCourse = "K1";
+        Lecturer.Status = "Active";
+        Lecturer.Role = "Lecturer";
+    }
+
+    private async Task AddLecturer()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        // Ensure Lecturer properties are correctly set
+        var lecturerToAdd = new ApplicationUser
+            {
+                UserName = Lecturer.Email, // UserName typically matches Email for Identity users
+                Email = Lecturer.Email,
+                FirstName = Lecturer.FirstName,
+                LastName = Lecturer.LastName,
+                PhoneNumber = Lecturer.PhoneNumber,
+                Code = Lecturer.Code,
+                IntialAdmissionCourse = Lecturer.IntialAdmissionCourse,
+                Status = Lecturer.Status,
+                Role = Lecturer.Role
+            };
+
+        context.Users.Add(lecturerToAdd);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/users/lecturers");
+    }
+
+
+    private async Task<string> GenerateNextLecturerCodeAsync()
+    {
+        // Retrieve the last lecturer code from the database
+        var lastLecturer = await DbFactory.CreateDbContext().Users
+            .Where(l => l.Code.StartsWith("LT"))
+            .OrderByDescending(l => l.Code)
+            .FirstOrDefaultAsync();
+
+        string newLecturerCode;
+        if (lastLecturer == null)
+        {
+            // No lecturer found, start with LT00001
+            newLecturerCode = "LT00001";
+        }
+        else
+        {
+            // Extract the numeric part of the last lecturer code
+            int lastCodeNumber = int.Parse(lastLecturer.Code.Substring(2));
+            // Increment by 1
+            newLecturerCode = $"LT{(lastCodeNumber + 1).ToString("D5")}";
+        }
+
+        return newLecturerCode;
+    }
+}

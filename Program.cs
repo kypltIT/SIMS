@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using SIMS.Components;
 using SIMS.Components.Account;
 using SIMS.Data;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +37,39 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
+
+
+builder.Services.AddAntiforgery();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+ .AddCookie(options =>
+ {
+     options.Events.OnValidatePrincipal = async context =>
+     {
+         var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+         var user = await userManager.GetUserAsync(context.Principal);
+         if (user != null)
+         {
+             // Add or update role claim
+             var claimsIdentity = (ClaimsIdentity)context.Principal.Identity;
+             if (!claimsIdentity.HasClaim(c => c.Type == "Role"))
+             {
+                 claimsIdentity.AddClaim(new Claim("Role", user.Role));
+             }
+         }
+     };
+ });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Student", policy => policy.RequireClaim("Role", "Student"));
+    options.AddPolicy("Lecture", policy => policy.RequireClaim("Role", "Lecture"));
+    options.AddPolicy("Admin", policy => policy.RequireClaim("Role", "Admin"));
+});
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 

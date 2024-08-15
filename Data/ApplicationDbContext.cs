@@ -10,5 +10,8 @@ namespace SIMS.Data
         public DbSet<SIMS.Models.Departments> Departments { get; set; } = default!;
         public DbSet<SIMS.Models.Majors> Majors { get; set; } = default!;
         public DbSet<SIMS.Models.Subjects> Subjects { get; set; } = default!;
+        public DbSet<SIMS.Models.Courses> Courses { get; set; } = default!;
+        public DbSet<ApplicationUser> ApplicationUser { get; set; } = default!;
+
     }
 }
