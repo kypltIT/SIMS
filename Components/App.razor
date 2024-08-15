@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title> Login - BTEC </title>
+    <title>Login - BTEC</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
@@ -13,15 +13,16 @@
     <link rel="icon" type="image/png" href="~/favicon.png" />
     <link rel="stylesheet" href="font-awesome/css/all.min.css" />
     <link rel="stylesheet" href="assets/css/tailwind.output.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" />
-    <link rel="stylesheet" href="assets/js/init-alpine.js" />
-   
-
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+            defer></script>
     <HeadOutlet />
 </head>
 
+
 <body>
     <Routes />
+    <script src="alpinejs/alpine.js" defer></script>
+    <script src="alpinejs/alpine-ie11.min.js" defer></script>
     <script src="_framework/blazor.web.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
@@ -43,6 +44,63 @@
                     path.setAttribute('d', iconEyeOffPath);
                 }
             });
+        });
+
+    </script>
+    <script>
+        // Function to toggle side menu
+        function toggleSideMenu() {
+            const sideMenu = document.querySelector('.page .z-20');
+            if (sideMenu) {
+                sideMenu.classList.toggle('hidden');
+            }
+        }
+
+        // Function to toggle theme
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // Function to toggle notifications menu
+        function toggleNotificationsMenu() {
+            const menu = document.querySelector('[aria-label="Notifications"] + ul');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        }
+
+        // Function to close notifications menu
+        function closeNotificationsMenu() {
+            const menu = document.querySelector('[aria-label="Notifications"] + ul');
+            if (menu) {
+                menu.classList.add('hidden');
+            }
+        }
+
+        // Function to toggle profile menu
+        function toggleProfileMenu() {
+            const menu = document.querySelector('[aria-label="Account"] + ul');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        }
+
+        // Function to close profile menu
+        function closeProfileMenu() {
+            const menu = document.querySelector('[aria-label="Account"] + ul');
+            if (menu) {
+                menu.classList.add('hidden');
+            }
+        }
+
+        // Add event listeners to handle click events outside the menus
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('[aria-label="Notifications"]')) {
+                closeNotificationsMenu();
+            }
+            if (!event.target.closest('[aria-label="Account"]')) {
+                closeProfileMenu();
+            }
         });
 
     </script>
