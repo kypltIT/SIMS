@@ -1,4 +1,4 @@
-﻿@page "/-courses/edit/{Id:int}"
+﻿@page "/-courses/edit"
 
 @using Microsoft.EntityFrameworkCore
 @using SIMS.Models
@@ -7,10 +7,10 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
-
-<h4>Courses</h4>
-<hr />
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Edit Courses
+</h2>
+<hr class="mb-4"/>
 @if (Courses is null)
 {
     <p><em>Loading...</em></p>

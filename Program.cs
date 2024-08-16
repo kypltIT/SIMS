@@ -67,7 +67,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Student", policy => policy.RequireClaim("Role", "Student"));
-    options.AddPolicy("Lecture", policy => policy.RequireClaim("Role", "Lecture"));
+    options.AddPolicy("Lecture", policy => policy.RequireClaim("Role", "Lecturer"));
     options.AddPolicy("Admin", policy => policy.RequireClaim("Role", "Admin"));
 });
 

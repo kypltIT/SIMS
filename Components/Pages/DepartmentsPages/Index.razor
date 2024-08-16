@@ -4,21 +4,23 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using SIMS.Models
 @inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
-
-<PageTitle>Index</PageTitle>
-
-<h1>Index</h1>
-
-<p>
-    <a href="departments/create">Create New</a>
-</p>
-
+<main class="h-full">
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Dashboard
+</h2>
+    <hr class="mb-4" />
+    <a class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
+    " href="/departments/create">
+        Create new
+        <span class="ml-2" aria-hidden="true">+</span>
+    </a>
 <QuickGrid Class="table" Items="DbFactory.CreateDbContext().Departments">
     <PropertyColumn Property="departments => departments.Name" />
 
     <TemplateColumn Context="departments">
         <a href="@($"departments/edit?id={departments.Id}")">Edit</a> |
-        <a href="@($"departments/details?id={departments.Id}")">Details</a> |
         <a href="@($"departments/delete?id={departments.Id}")">Delete</a>
     </TemplateColumn>
+
 </QuickGrid>
+</main>

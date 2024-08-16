@@ -8,12 +8,10 @@
 @inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
-
-<h1>Create</h1>
-
-<h4>Courses</h4>
-<hr />
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+	Create Courses
+</h2>
+<hr class="mb-4">
 <div class="row">
 	<div class="col-md-4">
 		<EditForm method="post" Model="Courses" OnValidSubmit="AddCourses" FormName="create" Enhance>
