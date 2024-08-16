@@ -1,0 +1,218 @@
+﻿@page "/studentcourses"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@using SIMS.Data
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Student Courses</PageTitle>
+
+<h1>Student Courses</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="mb-3">
+            <label for="department" class="form-label">Department:</label>
+            <InputSelect method="post" id="department" @bind-Value="selectedDepartmentId" class="form-control" @onchange="OnDepartmentChanged">
+                <option value="">-- Select Department --</option>
+                @foreach (var department in departments)
+                {
+                    <option value="@department.Id">@department.Name</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="mb-3">
+            <label for="major" class="form-label">Major:</label>
+            <InputSelect id="major" @bind-Value="selectedMajorId" class="form-control" @onchange="OnMajorChanged" disabled="@majorsDisabled">
+                <option value="">-- Select Major --</option>
+                @foreach (var major in majors)
+                {
+                    <option value="@major.Id">@major.Name</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="mb-3">
+            <label for="subject" class="form-label">Subject:</label>
+            <InputSelect id="subject" @bind-Value="selectedSubjectId" class="form-control" @onchange="OnSubjectChanged" disabled="@subjectsDisabled">
+                <option value="">-- Select Subject --</option>
+                @foreach (var subject in subjects)
+                {
+                    <option value="@subject.Id">@subject.Name</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="mb-3">
+            <label for="course" class="form-label">Course:</label>
+            <InputSelect id="course" @bind-Value="selectedCourseId" class="form-control" @onchange="OnCourseChanged" disabled="@coursesDisabled">
+                <option value="">-- Select Course --</option>
+                @foreach (var course in courses)
+                {
+                    <option value="@course.Id">@course.Name</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        @if (studentCourses.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Student ID</th>
+                        <th>Grade</th>
+                        <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var studentCourse in studentCourses)
+            {
+                <tr>
+                    <td>@studentCourse.Student.FirstName</td>
+                    <td>@studentCourse.Student.LastName</td>
+                    <td>@studentCourse.Student.Id</td>
+                            <td>@studentCourse.Grade</td>
+                            <td>@studentCourse.Note</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+        {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Student ID</th>
+                        <th>Grade</th>
+                        <th>Note</th>
+            </tr>
+        </thead>
+            </table>
+    <p>No students found for the selected course.</p>
+}
+    </div>
+</div>
+
+@code {
+    private List<Departments> departments = new();
+    private List<Majors> majors = new();
+    private List<Subjects> subjects = new();
+    private List<Courses> courses = new();
+    private List<StudentCourses> studentCourses = new();
+
+    private int? selectedDepartmentId;
+    private int? selectedMajorId;
+    private int? selectedSubjectId;
+    private int? selectedCourseId;
+
+    private bool majorsDisabled = true;
+    private bool subjectsDisabled = true;
+    private bool coursesDisabled = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        departments = await context.Departments.ToListAsync();
+        majors = await context.Majors.ToListAsync();
+        subjects = await context.Subjects.ToListAsync();
+        courses = await context.Courses.ToListAsync();
+        studentCourses = await context.StudentCourses.ToListAsync();
+    }
+
+    private async Task OnDepartmentChanged(ChangeEventArgs e)
+    {
+        selectedDepartmentId = int.TryParse(e.Value?.ToString(), out int value) ? value : (int?)null;
+
+        if (selectedDepartmentId.HasValue)
+        {
+            using var context = DbFactory.CreateDbContext();
+            majors = await context.Majors.Where(m => m.DepartmentId == selectedDepartmentId.Value).ToListAsync();
+            majorsDisabled = false;
+        }
+        else
+        {
+            majors.Clear();
+            majorsDisabled = true;
+            subjects.Clear();
+            subjectsDisabled = true;
+            courses.Clear();
+            coursesDisabled = true;
+        }
+
+        selectedMajorId = null;
+        selectedSubjectId = null;
+        selectedCourseId = null;
+        studentCourses.Clear();
+    }
+
+    private async Task OnMajorChanged(ChangeEventArgs e)
+    {
+        selectedMajorId = int.TryParse(e.Value?.ToString(), out int value) ? value : (int?)null;
+
+        if (selectedMajorId.HasValue)
+        {
+            using var context = DbFactory.CreateDbContext();
+            subjects = await context.Subjects.Where(s => s.MajorId == selectedMajorId.Value).ToListAsync();
+            subjectsDisabled = false;
+        }
+        else
+        {
+            subjects.Clear();
+            subjectsDisabled = true;
+            courses.Clear();
+            coursesDisabled = true;
+        }
+
+        selectedSubjectId = null;
+        selectedCourseId = null;
+        studentCourses.Clear();
+    }
+
+    private async Task OnSubjectChanged(ChangeEventArgs e)
+    {
+        selectedSubjectId = int.TryParse(e.Value?.ToString(), out int value) ? value : (int?)null;
+
+        if (selectedSubjectId.HasValue)
+        {
+            using var context = DbFactory.CreateDbContext();
+            courses = await context.Courses.Where(c => c.SubjectId == selectedSubjectId.Value).ToListAsync();
+            coursesDisabled = false;
+        }
+        else
+        {
+            courses.Clear();
+            coursesDisabled = true;
+        }
+
+        selectedCourseId = null;
+        studentCourses.Clear();
+    }
+
+    private async Task OnCourseChanged(ChangeEventArgs e)
+    {
+        selectedCourseId = int.TryParse(e.Value?.ToString(), out int value) ? value : (int?)null;
+
+        if (selectedCourseId.HasValue)
+        {
+            using var context = DbFactory.CreateDbContext();
+            studentCourses = await context.StudentCourses
+                                          .Include(sc => sc.Student)
+                                          .Where(sc => sc.CourseId == selectedCourseId.Value)
+                                          .ToListAsync();
+        }
+        else
+        {
+            studentCourses.Clear();
+        }
+    }
+}
+

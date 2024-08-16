@@ -1,0 +1,83 @@
+﻿@page "/studentcourses/create"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@using SIMS.Data
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create Student Course</PageTitle>
+
+<h1>Create Student Course</h1>
+
+<h4>Student Courses</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="StudentCourse" OnValidSubmit="AddStudentCourse" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+
+            <div class="mb-3">
+                <label for="studentid" class="form-label">Student:</label>
+                <InputSelect id="studentid" @bind-Value="StudentCourse.StudentId" class="form-control">
+                    @foreach (var student in Students)
+                    {
+                        <option value="@student.Id">@student.FirstName @student.LastName</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => StudentCourse.StudentId" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="courseid" class="form-label">Course:</label>
+                <InputSelect id="courseid" @bind-Value="StudentCourse.CourseId" class="form-control">
+                    @foreach (var course in Courses)
+                    {
+                        <option value="@course.Id">@course.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => StudentCourse.CourseId" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="grade" class="form-label">Grade:</label>
+                <InputText id="grade" @bind-Value="StudentCourse.Grade" class="form-control" />
+                <ValidationMessage For="() => StudentCourse.Grade" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="note" class="form-label">Note:</label>
+                <InputText id="note" @bind-Value="StudentCourse.Note" class="form-control" />
+                <ValidationMessage For="() => StudentCourse.Note" class="text-danger" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/studentcourses">Back to List</a>
+</div>
+
+@code {
+    public StudentCourses StudentCourse { get; set; } = new();
+    public List<ApplicationUser> Students { get; set; } = new();
+    public List<Courses> Courses { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Students = await context.ApplicationUser.ToListAsync();
+        Courses = await context.Courses.ToListAsync();
+    }
+
+    public async Task AddStudentCourse()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.StudentCourses.Add(StudentCourse);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/studentcourses");
+    }
+}
