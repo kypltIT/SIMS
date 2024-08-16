@@ -36,8 +36,4 @@
     <None Include="Components\Layout\StudentLayout.razor" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\Pages\StudentCoursesPages\" />
-  </ItemGroup>
-
 </Project>
