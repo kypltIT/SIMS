@@ -1,4 +1,4 @@
-﻿@page "/courses/edit"
+﻿@page "/-courses/edit/{Id:int}"
 
 @using Microsoft.EntityFrameworkCore
 @using SIMS.Models
@@ -70,7 +70,7 @@ else
 }
 
 <div>
-    <a href="/courses">Back to List</a>
+    <a href="/-courses">Back to List</a>
 </div>
 
 @code {
@@ -114,7 +114,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/courses");
+        NavigationManager.NavigateTo("/-courses");
     }
 
     bool CoursesExists(int id)

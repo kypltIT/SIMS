@@ -1,4 +1,4 @@
-﻿@page "/courses"
+﻿@page "/-courses"
 
 @using Microsoft.EntityFrameworkCore
 @using SIMS.Models
@@ -11,7 +11,7 @@
 <h1>Courses</h1>
 
 <p>
-    <a href="/courses/create" class="btn btn-primary">Create New Course</a>
+    <a href="/-courses/create" class="btn btn-primary">Create New Course</a>
 </p>
 
 @if (courses is null)
@@ -47,8 +47,8 @@ else
                     <td>@course.Subject?.Name</td>
                     <td>@course.Status</td>
                     <td>
-                        <a href="/courses/edit/@course.Id" class="btn btn-sm btn-warning">Edit</a> |
-                        <a href="/courses/deactivate/@course.Id" class="btn btn-sm btn-danger">Delete</a>
+                        <a href="/-courses/edit/@course.Id" class="btn btn-sm btn-warning">Edit</a> |
+                        <a href="/-courses/deactivate/@course.Id" class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
             }

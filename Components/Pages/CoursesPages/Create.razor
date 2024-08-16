@@ -1,4 +1,4 @@
-﻿@page "/courses/create"
+﻿@page "/-courses/create"
 
 @using Microsoft.EntityFrameworkCore
 @using SIMS.Models
@@ -77,7 +77,7 @@
 </div>
 
 <div>
-	<a href="/courses">Back to List</a>
+	<a href="/-courses">Back to List</a>
 </div>
 
 @code {
@@ -101,6 +101,6 @@
 		using var context = DbFactory.CreateDbContext();
 		context.Courses.Add(Courses);
 		await context.SaveChangesAsync();
-		NavigationManager.NavigateTo("/courses");
+		NavigationManager.NavigateTo("/-courses");
 	}
 }

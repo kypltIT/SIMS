@@ -14,7 +14,7 @@
     <div class="col-md-3">
         <div class="mb-3">
             <label for="department" class="form-label">Department:</label>
-            <InputSelect method="post" id="department" @bind-Value="selectedDepartmentId" class="form-control" @onchange="OnDepartmentChanged">
+            <InputSelect id="department" @bind-Value="selectedDepartmentId" @onchange="OnDepartmentChanged" class="form-control">
                 <option value="">-- Select Department --</option>
                 @foreach (var department in departments)
                 {
@@ -25,7 +25,7 @@
 
         <div class="mb-3">
             <label for="major" class="form-label">Major:</label>
-            <InputSelect id="major" @bind-Value="selectedMajorId" class="form-control" @onchange="OnMajorChanged" disabled="@majorsDisabled">
+            <InputSelect id="major" @bind-Value="selectedMajorId" @onchange="OnMajorChanged" class="form-control" disabled="@majorsDisabled">
                 <option value="">-- Select Major --</option>
                 @foreach (var major in majors)
                 {
@@ -36,7 +36,7 @@
 
         <div class="mb-3">
             <label for="subject" class="form-label">Subject:</label>
-            <InputSelect id="subject" @bind-Value="selectedSubjectId" class="form-control" @onchange="OnSubjectChanged" disabled="@subjectsDisabled">
+            <InputSelect id="subject" @bind-Value="selectedSubjectId" @onchange="OnSubjectChanged" class="form-control" disabled="@subjectsDisabled">
                 <option value="">-- Select Subject --</option>
                 @foreach (var subject in subjects)
                 {
@@ -47,7 +47,7 @@
 
         <div class="mb-3">
             <label for="course" class="form-label">Course:</label>
-            <InputSelect id="course" @bind-Value="selectedCourseId" class="form-control" @onchange="OnCourseChanged" disabled="@coursesDisabled">
+            <InputSelect id="course" @bind-Value="selectedCourseId" @onchange="OnCourseChanged" class="form-control" disabled="@coursesDisabled">
                 <option value="">-- Select Course --</option>
                 @foreach (var course in courses)
                 {
@@ -59,46 +59,46 @@
 
     <div class="col-md-9">
         @if (studentCourses.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Student ID</th>
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Student ID</th>
                         <th>Grade</th>
                         <th>Note</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var studentCourse in studentCourses)
-            {
-                <tr>
-                    <td>@studentCourse.Student.FirstName</td>
-                    <td>@studentCourse.Student.LastName</td>
-                    <td>@studentCourse.Student.Id</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var studentCourse in studentCourses)
+                    {
+                        <tr>
+                            <td>@studentCourse.Student.FirstName</td>
+                            <td>@studentCourse.Student.LastName</td>
+                            <td>@studentCourse.Student.Id</td>
                             <td>@studentCourse.Grade</td>
                             <td>@studentCourse.Note</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
         {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Student ID</th>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Student ID</th>
                         <th>Grade</th>
                         <th>Note</th>
-            </tr>
-        </thead>
+                    </tr>
+                </thead>
             </table>
-    <p>No students found for the selected course.</p>
-}
+            <p>No students found for the selected course.</p>
+        }
     </div>
 </div>
 
@@ -122,24 +122,30 @@ else
     {
         using var context = DbFactory.CreateDbContext();
         departments = await context.Departments.ToListAsync();
-        majors = await context.Majors.ToListAsync();
-        subjects = await context.Subjects.ToListAsync();
-        courses = await context.Courses.ToListAsync();
-        studentCourses = await context.StudentCourses.ToListAsync();
     }
 
     private async Task OnDepartmentChanged(ChangeEventArgs e)
     {
-        selectedDepartmentId = int.TryParse(e.Value?.ToString(), out int value) ? value : (int?)null;
-
-        if (selectedDepartmentId.HasValue)
+        Console.WriteLine($"Department changed: {e.Value}");
+        if (int.TryParse(e.Value?.ToString(), out int value))
         {
+            selectedDepartmentId = value;
+
             using var context = DbFactory.CreateDbContext();
             majors = await context.Majors.Where(m => m.DepartmentId == selectedDepartmentId.Value).ToListAsync();
-            majorsDisabled = false;
+            majorsDisabled = !majors.Any();
+
+            if (majorsDisabled)
+            {
+                subjects.Clear();
+                subjectsDisabled = true;
+                courses.Clear();
+                coursesDisabled = true;
+            }
         }
         else
         {
+            selectedDepartmentId = null;
             majors.Clear();
             majorsDisabled = true;
             subjects.Clear();
@@ -156,16 +162,24 @@ else
 
     private async Task OnMajorChanged(ChangeEventArgs e)
     {
-        selectedMajorId = int.TryParse(e.Value?.ToString(), out int value) ? value : (int?)null;
-
-        if (selectedMajorId.HasValue)
+        Console.WriteLine($"Major changed: {e.Value}");
+        if (int.TryParse(e.Value?.ToString(), out int value))
         {
+            selectedMajorId = value;
+
             using var context = DbFactory.CreateDbContext();
             subjects = await context.Subjects.Where(s => s.MajorId == selectedMajorId.Value).ToListAsync();
-            subjectsDisabled = false;
+            subjectsDisabled = !subjects.Any();
+
+            if (subjectsDisabled)
+            {
+                courses.Clear();
+                coursesDisabled = true;
+            }
         }
         else
         {
+            selectedMajorId = null;
             subjects.Clear();
             subjectsDisabled = true;
             courses.Clear();
@@ -179,16 +193,18 @@ else
 
     private async Task OnSubjectChanged(ChangeEventArgs e)
     {
-        selectedSubjectId = int.TryParse(e.Value?.ToString(), out int value) ? value : (int?)null;
-
-        if (selectedSubjectId.HasValue)
+        Console.WriteLine($"Subject changed: {e.Value}");
+        if (int.TryParse(e.Value?.ToString(), out int value))
         {
+            selectedSubjectId = value;
+
             using var context = DbFactory.CreateDbContext();
             courses = await context.Courses.Where(c => c.SubjectId == selectedSubjectId.Value).ToListAsync();
-            coursesDisabled = false;
+            coursesDisabled = !courses.Any();
         }
         else
         {
+            selectedSubjectId = null;
             courses.Clear();
             coursesDisabled = true;
         }
@@ -199,10 +215,11 @@ else
 
     private async Task OnCourseChanged(ChangeEventArgs e)
     {
-        selectedCourseId = int.TryParse(e.Value?.ToString(), out int value) ? value : (int?)null;
-
-        if (selectedCourseId.HasValue)
+        Console.WriteLine($"Course changed: {e.Value}");
+        if (int.TryParse(e.Value?.ToString(), out int value))
         {
+            selectedCourseId = value;
+
             using var context = DbFactory.CreateDbContext();
             studentCourses = await context.StudentCourses
                                           .Include(sc => sc.Student)
@@ -211,8 +228,8 @@ else
         }
         else
         {
+            selectedCourseId = null;
             studentCourses.Clear();
         }
     }
 }
-

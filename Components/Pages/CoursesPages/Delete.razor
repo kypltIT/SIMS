@@ -1,4 +1,4 @@
-﻿@page "/courses/deactivate/{Id:int}"
+﻿@page "/-courses/deactivate/{Id:int}"
 
 @using Microsoft.EntityFrameworkCore
 @using SIMS.Models
@@ -38,7 +38,7 @@ else
                     <span>Activate</span>
                 }
             </button>
-            <a href="/courses" class="btn btn-secondary">Back to List</a>
+            <a href="/-courses" class="btn btn-secondary">Back to List</a>
         </EditForm>
     </div>
 }
@@ -69,7 +69,7 @@ else
             context.Courses.Update(course);
             await context.SaveChangesAsync();
 
-            NavigationManager.NavigateTo("/courses");
+            NavigationManager.NavigateTo("/-courses");
         }
     }
 }
