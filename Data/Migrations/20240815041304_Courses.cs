@@ -22,8 +22,7 @@ namespace SIMS.Migrations
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SemesterId = table.Column<int>(type: "int", nullable: false),
-                    LecturerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LectureId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    LecturerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubjectId = table.Column<int>(type: "int", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -32,8 +31,8 @@ namespace SIMS.Migrations
                 {
                     table.PrimaryKey("PK_Courses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Courses_AspNetUsers_LectureId",
-                        column: x => x.LectureId,
+                        name: "FK_Courses_AspNetUsers_LecturerId",
+                        column: x => x.LecturerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -51,9 +50,9 @@ namespace SIMS.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Courses_LectureId",
+                name: "IX_Courses_LecturerId",
                 table: "Courses",
-                column: "LectureId");
+                column: "LecturerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_SemesterId",

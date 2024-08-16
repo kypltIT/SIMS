@@ -267,7 +267,7 @@ namespace SIMS.Migrations
 
                     b.Property<string>("LecturerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -4,8 +4,7 @@
       "serviceConnectorResourceId": "",
       "secretStore": "LocalSecretsFile",
       "type": "mssql.onprem",
-      "connectionId": "ConnectionStrings:SIMS-Database",
-      "dynamicId": null
+      "connectionId": "ConnectionStrings:SIMS-Test-DB"
     }
   }
 }

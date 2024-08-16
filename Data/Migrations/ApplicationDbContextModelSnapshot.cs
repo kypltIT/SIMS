@@ -259,12 +259,10 @@ namespace SIMS.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LectureId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LecturerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -285,7 +283,7 @@ namespace SIMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LectureId");
+                    b.HasIndex("LecturerId");
 
                     b.HasIndex("SemesterId");
 
@@ -439,9 +437,9 @@ namespace SIMS.Migrations
 
             modelBuilder.Entity("SIMS.Models.Courses", b =>
                 {
-                    b.HasOne("SIMS.Data.ApplicationUser", "Lecture")
+                    b.HasOne("SIMS.Data.ApplicationUser", "Lecturer")
                         .WithMany()
-                        .HasForeignKey("LectureId");
+                        .HasForeignKey("LecturerId");
 
                     b.HasOne("SIMS.Models.Semesters", "Semester")
                         .WithMany()
@@ -455,7 +453,7 @@ namespace SIMS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Lecture");
+                    b.Navigation("Lecturer");
 
                     b.Navigation("Semester");
 
