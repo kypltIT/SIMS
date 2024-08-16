@@ -6,11 +6,18 @@
 @using Microsoft.AspNetCore.Identity
 @using SIMS.Components.Layout
 @using SIMS.Data
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication.Cookies
 @using Microsoft.AspNetCore.Components;
+@using SIMS.Components.Account.Shared
+
+
+
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
 
 <!-- Main content -->
 <div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
@@ -127,6 +134,7 @@
         {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 
@@ -138,6 +146,16 @@
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
+            var userLogin = await SignInManager.UserManager.FindByEmailAsync(Input.Email);
+            if (userLogin != null)
+            {
+                var claimsIdentity = (ClaimsIdentity)HttpContext.User.Identity;
+                if (!claimsIdentity.HasClaim(c => c.Type == "Role"))
+                {
+                    claimsIdentity.AddClaim(new Claim("Role", userLogin.Role));
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                }
+            }
 
             // Check if ReturnUrl is valid, otherwise navigate to the default dashboard
             if (string.IsNullOrEmpty(ReturnUrl) || !Uri.IsWellFormedUriString(ReturnUrl, UriKind.Relative))

@@ -1,8 +1,18 @@
 ﻿@implements IDisposable
 
+@using SIMS.Data
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
+
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject SignInManager<ApplicationUser> SignInManager
 
 <div class="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
+	@if(isStudent)
+	{
+			<img class="" src="assets/img/login-office.png" alt="" style="width:%; height:%"><a href="/dashboard"></a>
+	}
 	<!-- Wrapper for hamburger to align it to the right -->
 	<div class="flex-1 flex justify-end">
 		<button class="p-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple"
@@ -132,12 +142,26 @@
 
 	private string activeLink;
 
-	protected override void OnInitialized()
+	private bool isStudent;
+	private bool isAdmin;
+	private bool isLecture;
+
+	protected override async Task OnInitializedAsync()
 	{
 		// Initialize the active link based on the current URL
+		currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
 		activeLink = NavigationManager.Uri;
 		NavigationManager.LocationChanged += OnLocationChanged;
+
+		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		var user = authState.User;
+
+		// Check if the user is in the "Student" role
+		isStudent = user.Claims.Any(c => c.Type == "Role" && c.Value == "Student");
+		isAdmin = user.Claims.Any(c => c.Type == "Role" && c.Value == "Admin");
+		isLecture = user.Claims.Any(c => c.Type == "Role" && c.Value == "Lecturer");
 	}
+
 
 	private void SetActive(string link)
 	{
@@ -153,6 +177,7 @@
 	private void OnLocationChanged(object sender, LocationChangedEventArgs e)
 	{
 		// Update the active link when the location changes
+		currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
 		activeLink = e.Location;
 		StateHasChanged();
 	}
