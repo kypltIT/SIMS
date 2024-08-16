@@ -13,7 +13,7 @@ namespace SIMS.Models
         public int SemesterId { get; set; }
         public Semesters Semester { get; set; }
         public string LecturerId { get; set; }
-        public ApplicationUser Lecture { get; set; }
+        public ApplicationUser Lecturer { get; set; }
         public int SubjectId { get; set; }
         public Subjects Subject { get; set; }
 

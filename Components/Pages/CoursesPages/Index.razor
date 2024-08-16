@@ -1,31 +1,71 @@
 ﻿@page "/courses"
 
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using SIMS.Models
-@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@using SIMS.Data
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Courses</PageTitle>
 
-<h1>Index</h1>
+<h1>Courses</h1>
 
 <p>
-    <a href="courses/create">Create New</a>
+    <a href="/courses/create" class="btn btn-primary">Create New Course</a>
 </p>
 
-<QuickGrid Class="table" Items="DbFactory.CreateDbContext().Courses">
-    <PropertyColumn Property="courses => courses.Name" />
-    <PropertyColumn Property="courses => courses.StartDate" />
-    <PropertyColumn Property="courses => courses.EndDate" />
-    <PropertyColumn Property="courses => courses.SemesterId" />
-    <PropertyColumn Property="courses => courses.LecturerId" />
-    <PropertyColumn Property="courses => courses.SubjectId" />
-    <PropertyColumn Property="courses => courses.Code" />
-    <PropertyColumn Property="courses => courses.Status" />
+@if (courses is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Semester</th>
+                <th>Lecturer</th>
+                <th>Subject</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var course in courses)
+            {
+                <tr>
+                    <td>@course.Name</td>
+                    <td>@course.Code</td>
+                    <td>@course.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@course.EndDate.ToString("yyyy-MM-dd")</td>
+                    <td>@course.Semester?.Name</td>
+                    <td>@($"{course.Lecturer?.FirstName} {course.Lecturer?.LastName}")</td>
+                    <td>@course.Subject?.Name</td>
+                    <td>@course.Status</td>
+                    <td>
+                        <a href="/courses/edit/@course.Id" class="btn btn-sm btn-warning">Edit</a> |
+                        <a href="/courses/deactivate/@course.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-    <TemplateColumn Context="courses">
-        <a href="@($"courses/edit?id={courses.Id}")">Edit</a> |
-        <a href="@($"courses/details?id={courses.Id}")">Details</a> |
-        <a href="@($"courses/delete?id={courses.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+@code {
+    private List<Courses>? courses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        courses = await context.Courses
+                               .Include(c => c.Semester)
+                               .Include(c => c.Lecturer)
+                               .Include(c => c.Subject)
+                               .ToListAsync();
+    }
+}
