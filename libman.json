@@ -7,9 +7,16 @@
       "destination": "wwwroot/font-awesome/"
     },
     {
-      "provider": "cdnjs",
       "library": "alpinejs@2.8.2",
       "destination": "wwwroot/alpinejs/"
+    },
+    {
+      "library": "select2@4.0.13",
+      "destination": "wwwroot/select2/"
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/jquery/"
     }
   ]
 }

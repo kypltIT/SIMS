@@ -9,9 +9,9 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 <div class="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
-	@if(isStudent)
+	@if(isStudent || isLecturer )
 	{
-			<img class="" src="assets/img/login-office.png" alt="" style="width:%; height:%"><a href="/dashboard"></a>
+			<img class="" src="assets/img/login-office.png" alt="" style="width:7%; height:%"><a href="/dashboard"></a>
 	}
 	<!-- Wrapper for hamburger to align it to the right -->
 	<div class="flex-1 flex justify-end">
@@ -121,7 +121,7 @@
 
 	private bool isStudent;
 	private bool isAdmin;
-	private bool isLecture;
+	private bool isLecturer;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -136,7 +136,7 @@
 		// Check if the user is in the "Student" role
 		isStudent = user.Claims.Any(c => c.Type == "Role" && c.Value == "Student");
 		isAdmin = user.Claims.Any(c => c.Type == "Role" && c.Value == "Admin");
-		isLecture = user.Claims.Any(c => c.Type == "Role" && c.Value == "Lecturer");
+		isLecturer = user.Claims.Any(c => c.Type == "Role" && c.Value == "Lecturer");
 	}
 
 

@@ -6,15 +6,22 @@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Student Courses</PageTitle>
-
-<h1>Student Courses</h1>
-
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Student-Courses
+</h2>
+    <hr class="mb-4" />
+<div class="my-3">
+    <a class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
+    " href="/studentcourses/create">
+        Create new
+        <span class="ml-2" aria-hidden="true">+</span>
+    </a>
+ </div>
 <div class="row">
     <div class="col-md-3">
         <div class="mb-3">
             <label for="department" class="form-label">Department:</label>
-            <InputSelect id="department" @bind-Value="selectedDepartmentId" @onchange="OnDepartmentChanged" class="form-control">
+            <InputSelect id="department" @onchange="OnDepartmentChanged" @bind-Value="selectedDepartmentId" class="form-control">
                 <option value="">-- Select Department --</option>
                 @foreach (var department in departments)
                 {
@@ -25,7 +32,7 @@
 
         <div class="mb-3">
             <label for="major" class="form-label">Major:</label>
-            <InputSelect id="major" @bind-Value="selectedMajorId" @onchange="OnMajorChanged" class="form-control" disabled="@majorsDisabled">
+            <InputSelect id="major" @bind-Value="selectedMajorId" class="form-control" @onchange="OnMajorChanged" disabled="@majorsDisabled">
                 <option value="">-- Select Major --</option>
                 @foreach (var major in majors)
                 {
@@ -36,7 +43,7 @@
 
         <div class="mb-3">
             <label for="subject" class="form-label">Subject:</label>
-            <InputSelect id="subject" @bind-Value="selectedSubjectId" @onchange="OnSubjectChanged" class="form-control" disabled="@subjectsDisabled">
+            <InputSelect id="subject" @bind-Value="selectedSubjectId" class="form-control" @onchange="OnSubjectChanged" disabled="@subjectsDisabled">
                 <option value="">-- Select Subject --</option>
                 @foreach (var subject in subjects)
                 {
@@ -47,7 +54,7 @@
 
         <div class="mb-3">
             <label for="course" class="form-label">Course:</label>
-            <InputSelect id="course" @bind-Value="selectedCourseId" @onchange="OnCourseChanged" class="form-control" disabled="@coursesDisabled">
+            <InputSelect id="course" @bind-Value="selectedCourseId" class="form-control" @onchange="OnCourseChanged" disabled="@coursesDisabled">
                 <option value="">-- Select Course --</option>
                 @foreach (var course in courses)
                 {
@@ -86,17 +93,6 @@
         }
         else
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Student ID</th>
-                        <th>Grade</th>
-                        <th>Note</th>
-                    </tr>
-                </thead>
-            </table>
             <p>No students found for the selected course.</p>
         }
     </div>
@@ -126,32 +122,22 @@
 
     private async Task OnDepartmentChanged(ChangeEventArgs e)
     {
-        Console.WriteLine($"Department changed: {e.Value}");
-        if (int.TryParse(e.Value?.ToString(), out int value))
+        if (int.TryParse(e.Value?.ToString(), out int departmentId))
         {
-            selectedDepartmentId = value;
+            selectedDepartmentId = departmentId;
 
             using var context = DbFactory.CreateDbContext();
-            majors = await context.Majors.Where(m => m.DepartmentId == selectedDepartmentId.Value).ToListAsync();
+            majors = await context.Majors.Where(m => m.DepartmentId == departmentId).ToListAsync();
             majorsDisabled = !majors.Any();
 
-            if (majorsDisabled)
-            {
-                subjects.Clear();
-                subjectsDisabled = true;
-                courses.Clear();
-                coursesDisabled = true;
-            }
-        }
-        else
-        {
-            selectedDepartmentId = null;
-            majors.Clear();
-            majorsDisabled = true;
             subjects.Clear();
             subjectsDisabled = true;
             courses.Clear();
             coursesDisabled = true;
+        }
+        else
+        {
+            ResetFilters();
         }
 
         selectedMajorId = null;
@@ -162,28 +148,20 @@
 
     private async Task OnMajorChanged(ChangeEventArgs e)
     {
-        Console.WriteLine($"Major changed: {e.Value}");
-        if (int.TryParse(e.Value?.ToString(), out int value))
+        if (int.TryParse(e.Value?.ToString(), out int majorId))
         {
-            selectedMajorId = value;
+            selectedMajorId = majorId;
 
             using var context = DbFactory.CreateDbContext();
-            subjects = await context.Subjects.Where(s => s.MajorId == selectedMajorId.Value).ToListAsync();
+            subjects = await context.Subjects.Where(s => s.MajorId == majorId).ToListAsync();
             subjectsDisabled = !subjects.Any();
 
-            if (subjectsDisabled)
-            {
-                courses.Clear();
-                coursesDisabled = true;
-            }
+            courses.Clear();
+            coursesDisabled = true;
         }
         else
         {
-            selectedMajorId = null;
-            subjects.Clear();
-            subjectsDisabled = true;
-            courses.Clear();
-            coursesDisabled = true;
+            ResetFilters();
         }
 
         selectedSubjectId = null;
@@ -193,18 +171,16 @@
 
     private async Task OnSubjectChanged(ChangeEventArgs e)
     {
-        Console.WriteLine($"Subject changed: {e.Value}");
-        if (int.TryParse(e.Value?.ToString(), out int value))
+        if (int.TryParse(e.Value?.ToString(), out int subjectId))
         {
-            selectedSubjectId = value;
+            selectedSubjectId = subjectId;
 
             using var context = DbFactory.CreateDbContext();
-            courses = await context.Courses.Where(c => c.SubjectId == selectedSubjectId.Value).ToListAsync();
+            courses = await context.Courses.Where(c => c.SubjectId == subjectId).ToListAsync();
             coursesDisabled = !courses.Any();
         }
         else
         {
-            selectedSubjectId = null;
             courses.Clear();
             coursesDisabled = true;
         }
@@ -215,21 +191,36 @@
 
     private async Task OnCourseChanged(ChangeEventArgs e)
     {
-        Console.WriteLine($"Course changed: {e.Value}");
-        if (int.TryParse(e.Value?.ToString(), out int value))
+        if (int.TryParse(e.Value?.ToString(), out int courseId))
         {
-            selectedCourseId = value;
+            selectedCourseId = courseId;
 
             using var context = DbFactory.CreateDbContext();
             studentCourses = await context.StudentCourses
                                           .Include(sc => sc.Student)
-                                          .Where(sc => sc.CourseId == selectedCourseId.Value)
+                                          .Where(sc => sc.CourseId == courseId)
                                           .ToListAsync();
         }
         else
         {
-            selectedCourseId = null;
             studentCourses.Clear();
         }
+    }
+
+    private void ResetFilters()
+    {
+        selectedDepartmentId = null;
+        selectedMajorId = null;
+        selectedSubjectId = null;
+        selectedCourseId = null;
+
+        majors.Clear();
+        majorsDisabled = true;
+
+        subjects.Clear();
+        subjectsDisabled = true;
+
+        courses.Clear();
+        coursesDisabled = true;
     }
 }

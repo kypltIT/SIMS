@@ -1,0 +1,184 @@
+﻿@page "/-courses/assign"
+
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+<PageTitle>Assign Student into Course</PageTitle>
+
+<h1>Assign Student into Course</h1>
+
+<div>
+    <h4>Courses</h4>
+    <hr />
+    @if (courses is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-6">
+                <dl class="row">
+                    <dt class="col-sm-2">Name</dt>
+                    <dd class="col-sm-10">@courses.Name</dd>
+                    <dt class="col-sm-2">StartDate</dt>
+                    <dd class="col-sm-10">@courses.StartDate</dd>
+                    <dt class="col-sm-2">EndDate</dt>
+                    <dd class="col-sm-10">@courses.EndDate</dd>
+                    <dt class="col-sm-2">Semester</dt>
+                    <dd class="col-sm-10">@courses.Semester.Name</dd>
+                    <dt class="col-sm-2">Lecture</dt>
+                    <dd class="col-sm-10">@courses.Lecturer.FirstName @courses.Lecturer.LastName </dd>
+                    <dt class="col-sm-2">Subject</dt>
+                    <dd class="col-sm-10">@courses.Subject.Name</dd>
+                </dl>
+            </div>
+            <div class="col-6">
+                <h4>Enroll student into course:</h4>
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="studentSelect" multiple class="form-control" style="width: 100%;"></select>
+                </div>
+                <button class="btn btn-primary" @onclick="EnrollStudents">Enroll</button>
+
+            </div>
+        </div>
+    }
+    <hr />
+    <h3>Lists of student enrolled</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">Code</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (StudentCourses != null && StudentCourses.Count > 0)
+            {
+
+                int i = 1;
+                @foreach (StudentCourses student in StudentCourses)
+                {
+                    <tr>
+                        <td class="text-center">@i</td>
+                        <td class="text-center">@student.Student.Code</td>
+                        <td class="text-center">@student.Student.FirstName @student.Student.LastName</td>
+                        <td class="text-center">@student.Student.Email</td>
+                        <td class="text-center">
+                            <button class="btn btn-danger btn-sm" @onclick="() => RemoveStudent(student.StudentId)">Remove</button>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">No data!</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+    Courses? courses;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    public List<StudentCourses> StudentCourses { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        courses = await context.Courses
+            .Include(m => m.Semester)
+            .Include(m => m.Subject)
+            .Include(m => m.Lecturer)
+            .FirstOrDefaultAsync(m => m.Id == Id);
+
+        StudentCourses = await context.StudentCourses
+    .Where(course => course.CourseId == Id)
+    .Include(student => student.Student)
+    .ToListAsync();
+
+        if (courses is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(500);
+            await JS.InvokeVoidAsync("initializeSelect2", Id);
+        }
+    }
+    private async Task EnrollStudents()
+    {
+        var selectedStudentIds = await JS.InvokeAsync<string[]>("getSelectedValues", "studentSelect");
+
+        if (selectedStudentIds != null && selectedStudentIds.Length > 0)
+        {
+            using var context = DbFactory.CreateDbContext();
+
+            foreach (var studentId in selectedStudentIds)
+            {
+                var studentCourse = new StudentCourses
+                    {
+                        CourseId = Id,
+                        StudentId = studentId,
+                        Grade = null // or set a default grade
+                    };
+
+                context.StudentCourses.Add(studentCourse);
+            }
+
+            await context.SaveChangesAsync();
+
+            // Reload the students list
+            StudentCourses = await context.StudentCourses
+                .Where(course => course.CourseId == Id)
+                .Include(student => student.Student)
+                .ToListAsync();
+            await JS.InvokeVoidAsync("clearSelect2", "studentSelect");
+
+            StateHasChanged(); // Refresh the UI
+        }
+    }
+    private async Task RemoveStudent(string studentId)
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        var studentCourse = await context.StudentCourses
+            .Where(sc => sc.StudentId == studentId && sc.CourseId == Id)
+            .FirstOrDefaultAsync();
+
+        if (studentCourse != null)
+        {
+            context.StudentCourses.Remove(studentCourse);
+            await context.SaveChangesAsync();
+
+            // Reload the students list
+            StudentCourses = await context.StudentCourses
+                .Where(course => course.CourseId == Id)
+                .Include(student => student.Student)
+                .ToListAsync();
+
+            StateHasChanged(); // Refresh the UI
+        }
+    }
+
+}

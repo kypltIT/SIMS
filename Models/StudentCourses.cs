@@ -10,7 +10,7 @@ namespace SIMS.Models
 
         public int CourseId { get; set; }
         public Courses Course { get; set; }
-        public string Grade { get; set; }
-        public string Note { get; set; }
+        public string? Grade { get; set; }
+        public string? Note { get; set; }
     }
 }

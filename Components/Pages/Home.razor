@@ -5,6 +5,11 @@
 @using SIMS.Data
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -28,212 +33,44 @@
 		<div class="container px-16 mx-auto grid">
 
 			<!-- CTA -->
-			<a class="my-6 text-xl font-semibold flex items-center justify-between p-4 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md">
-				Dashboard
-			</a>
-
-			<!-- Cards -->
-			<div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-2">
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-1.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-2.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-3.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-4.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-5.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-6.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
+			<div class="my-6 text-xl font-semibold flex items-center justify-between p-4 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md">
+				My Course
 			</div>
-			<div class="items-center px-4 py-3 mb-4 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
-				<span class="flex items-center col-span-3">
-					Showing 21-30 of 100
-				</span>
-				<span class="col-span-2"></span>
-				<!-- Pagination -->
-				<span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-					<nav aria-label="Table navigation">
-						<ul class="inline-flex items-center">
-							<li>
-								<button class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
-										aria-label="Previous">
-									<svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-										<path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-											  clip-rule="evenodd" fill-rule="evenodd"></path>
-									</svg>
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									1
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									2
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
-									3
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									4
-								</button>
-							</li>
-							<li>
-								<span class="px-3 py-1">...</span>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									8
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									9
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
-										aria-label="Next">
-									<svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
-										<path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-											  clip-rule="evenodd" fill-rule="evenodd"></path>
-									</svg>
-								</button>
-							</li>
-						</ul>
-					</nav>
-				</span>
-			</div>
-			<footer class="shadow-md dark:bg-gray-800 w-full flex items-center p-4 text-purple-100 bg-purple-600">
-				<div class="px-16 mx-auto container flex justify-between py-4 mb-4">
-					<div class="">
-						<p class="text-xl font-semibold">
-							Ha Noi
-						</p>
-						<div class="text-sm">
-							<p>
-								Address
-							</p>
-							<p>
-								Email
-							</p>
-							<p>
-								Hotline
-							</p>
-						</div>
-					</div>
-					<div class="">
-						<p class="text-xl font-semibold">
-							Ha Noi
-						</p>
-						<div class="text-sm">
-							<p>
-								Address
-							</p>
-							<p>
-								Email
-							</p>
-							<p>
-								Hotline
-							</p>
-						</div>
-					</div>
-					<div class="">
-						<p class="text-xl font-semibold">
-							Ha Noi
-						</p>
-						<div class="text-sm">
-							<p>
-								Address
-							</p>
-							<p>
-								Email
-							</p>
-							<p>
-								Hotline
-							</p>
-						</div>
-					</div>
-					<div class="">
-						<p class="text-xl font-semibold">
-							Ha Noi
-						</p>
-						<div class="text-sm">
-							<p>
-								Address
-							</p>
-							<p>
-								Email
-							</p>
-							<p>
-								Hotline
-							</p>
-						</div>
-					</div>
-
-				</div>
-
-			</footer>
+			@if (Courses != null && Courses.Any())
+			{
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Course Name</th>
+							<th>Start Date</th>
+							<th>End Date</th>
+							<th>Semester</th>
+							<th>Lecturer</th>
+							<th>Subject</th>
+							<th>Grade</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var course in StudentCourses)
+						{
+							<tr>
+								<td>@course.Course.Name</td>
+								<td>@course.Course.StartDate.ToShortDateString()</td>
+								<td>@course.Course.EndDate.ToShortDateString()</td>
+								<td>@course.Course.Semester.Name</td>
+								<td>@course.Course.Lecturer.FirstName + @course.Course.Lecturer.LastName</td>
+								<td>@course.Course.Subject.Name</td>
+								<td>@(string.IsNullOrEmpty(course.Grade) ? "Not graded" : course.Grade)</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p><em>No courses available.</em></p>
+			}
+			
 		</div>
 
 	</main>
@@ -246,216 +83,49 @@
 		<div class="container px-16 mx-auto grid">
 
 			<!-- CTA -->
-			<a class="my-6 text-xl font-semibold flex items-center justify-between p-4 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md">
-				Dashboard
-			</a>
-
-			<!-- Cards -->
-			<div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-2">
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-1.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-2.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-3.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-4.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-5.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
-
-				<!-- Card -->
-				<div class="items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-					<div>
-						<div class="course-image" style="background-image: url(assets/img/back-6.svg);">
-						</div>
-						<p class="mt-4 mb-2 text-gray-700 dark:text-gray-200">
-							SP24 - SE06202 - Programming
-						</p>
-					</div>
-				</div>
+			<div class="my-6 text-xl font-semibold flex items-center justify-between p-4 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md">
+				My Course
 			</div>
-			<div class="items-center px-4 py-3 mb-4 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
-				<span class="flex items-center col-span-3">
-					Showing 21-30 of 100
-				</span>
-				<span class="col-span-2"></span>
-				<!-- Pagination -->
-				<span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
-					<nav aria-label="Table navigation">
-						<ul class="inline-flex items-center">
-							<li>
-								<button class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
-										aria-label="Previous">
-									<svg aria-hidden="true" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-										<path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-											  clip-rule="evenodd" fill-rule="evenodd"></path>
-									</svg>
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									1
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									2
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
-									3
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									4
-								</button>
-							</li>
-							<li>
-								<span class="px-3 py-1">...</span>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									8
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-									9
-								</button>
-							</li>
-							<li>
-								<button class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
-										aria-label="Next">
-									<svg class="w-4 h-4 fill-current" aria-hidden="true" viewBox="0 0 20 20">
-										<path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-											  clip-rule="evenodd" fill-rule="evenodd"></path>
-									</svg>
-								</button>
-							</li>
-						</ul>
-					</nav>
-				</span>
-			</div>
-			<footer class="shadow-md dark:bg-gray-800 w-full flex items-center p-4 text-purple-100 bg-purple-600">
-				<div class="px-16 mx-auto container flex justify-between py-4 mb-4">
-					<div class="">
-						<p class="text-xl font-semibold">
-							Ha Noi
-						</p>
-						<div class="text-sm">
-							<p>
-								Address
-							</p>
-							<p>
-								Email
-							</p>
-							<p>
-								Hotline
-							</p>
-						</div>
-					</div>
-					<div class="">
-						<p class="text-xl font-semibold">
-							Ha Noi
-						</p>
-						<div class="text-sm">
-							<p>
-								Address
-							</p>
-							<p>
-								Email
-							</p>
-							<p>
-								Hotline
-							</p>
-						</div>
-					</div>
-					<div class="">
-						<p class="text-xl font-semibold">
-							Ha Noi
-						</p>
-						<div class="text-sm">
-							<p>
-								Address
-							</p>
-							<p>
-								Email
-							</p>
-							<p>
-								Hotline
-							</p>
-						</div>
-					</div>
-					<div class="">
-						<p class="text-xl font-semibold">
-							Ha Noi
-						</p>
-						<div class="text-sm">
-							<p>
-								Address
-							</p>
-							<p>
-								Email
-							</p>
-							<p>
-								Hotline
-							</p>
-						</div>
-					</div>
 
-				</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Course Name</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Semester</th>
+						<th>Lecturer</th>
+						<th>Subject</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var course in Courses)
+					{
+						<tr>
+							<td>@course.Name</td>
+							<td>@course.StartDate.ToShortDateString()</td>
+							<td>@course.EndDate.ToShortDateString()</td>
+							<td>@course.Semester.Name</td>
+							<td>@course.Lecturer.FirstName @course.Lecturer.LastName</td>
+							<td>@course.Subject.Name</td>
+							<td>
+								
+								
+									<a href="@($"-courses/details ? id ={ course.Id}")"> <i class="fa-solid fa-circle-info"></i></a>
+									<br />
+						
+								<a href="@($"-courses/grade?id={course.Id}")" class="ms-3">Add Grades</a>
 
-			</footer>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
 		</div>
-
 	</main>
-}
+} 
 @code {
 	private string? currentUrl;
 
@@ -465,12 +135,36 @@
 	private bool isAdmin;
 	private bool isLecturer;
 
+	public List<StudentCourses> StudentCourses { get; set; } = new();
+	string? studentId;
+
+	private List<Courses> Courses { get; set; } = new List<Courses>();
+	private bool IsAdmin { get; set; }
+
 	protected override async Task OnInitializedAsync()
 	{
-		// Initialize the active link based on the current URL
-		currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-		activeLink = NavigationManager.Uri;
-		NavigationManager.LocationChanged += OnLocationChanged;
+		studentId = SIMS.Components.Layout.NavMenu.userId;
+
+
+		using var context = DbFactory.CreateDbContext();
+
+		// Retrieve Courses for the current student
+		Courses = await context.Courses
+			.Include(m => m.Semester)
+			.Include(m => m.Subject)
+			.Include(m => m.Lecturer)
+			.ToListAsync();
+
+		// Retrieve StudentCourses for the current student
+		StudentCourses = await context.StudentCourses
+									.Where(sc => sc.StudentId == studentId)
+									.Include(sc => sc.Course)
+										.ThenInclude(c => c.Semester)
+									.Include(sc => sc.Course)
+										.ThenInclude(c => c.Subject)
+									.Include(sc => sc.Course)
+										.ThenInclude(c => c.Lecturer)
+									.ToListAsync();
 
 		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 		var user = authState.User;
@@ -479,7 +173,17 @@
 		isStudent = user.Claims.Any(c => c.Type == "Role" && c.Value == "Student");
 		isAdmin = user.Claims.Any(c => c.Type == "Role" && c.Value == "Admin");
 		isLecturer = user.Claims.Any(c => c.Type == "Role" && c.Value == "Lecturer");
+
+
+
+
+		// Initialize the active link based on the current URL
+		currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+		activeLink = NavigationManager.Uri;
+		NavigationManager.LocationChanged += OnLocationChanged;
 	}
+
+
 
 
 	private void SetActive(string link)

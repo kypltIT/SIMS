@@ -1,10 +1,20 @@
 ﻿@page "/users/lecturers/create"
 
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
 @using Microsoft.EntityFrameworkCore
 @using SIMS.Data
 @using SIMS.Models
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Text
+@using System.Text.Encodings.Web
+@inject IUserStore<ApplicationUser> UserStore
 @inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@inject UserManager<SIMS.Data.ApplicationUser> UserManager
 
 <PageTitle>Create Lecturer</PageTitle>
 
@@ -37,6 +47,11 @@
                 <InputText id="email" @bind-Value="Lecturer.Email" class="form-control" />
                 <ValidationMessage For="() => Lecturer.Email" class="text-danger" />
             </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <InputText id="password" @bind-Value="Lecturer.PasswordHash" class="form-control" />
+                <ValidationMessage For="() => Lecturer.PasswordHash" class="text-danger" />
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -61,12 +76,14 @@
 
     private async Task AddLecturer()
     {
+        var passwordHasher = new Microsoft.AspNetCore.Identity.PasswordHasher<Microsoft.AspNetCore.Identity.IdentityUser>();
+
         using var context = DbFactory.CreateDbContext();
 
         // Ensure Lecturer properties are correctly set
-        var lecturerToAdd = new ApplicationUser
+        SIMS.Data.ApplicationUser lecturerToAdd = new Data.ApplicationUser
             {
-                UserName = Lecturer.Email, // UserName typically matches Email for Identity users
+                UserName = Lecturer.Code, // UserName typically matches Email for Identity users
                 Email = Lecturer.Email,
                 FirstName = Lecturer.FirstName,
                 LastName = Lecturer.LastName,
@@ -74,11 +91,17 @@
                 Code = Lecturer.Code,
                 IntialAdmissionCourse = Lecturer.IntialAdmissionCourse,
                 Status = Lecturer.Status,
-                Role = Lecturer.Role
-            };
+                Role = Lecturer.Role,
+                PasswordHash = Lecturer.PasswordHash,
+                NormalizedEmail = Lecturer.Email.ToUpper(),
+                NormalizedUserName = Lecturer.Code.ToUpper(),
+                LockoutEnabled = true
 
-        context.Users.Add(lecturerToAdd);
-        await context.SaveChangesAsync();
+            };
+        await UserStore.SetUserNameAsync(lecturerToAdd, Lecturer.Email, CancellationToken.None);
+        var emailStore = GetEmailStore();
+        await emailStore.SetEmailAsync(lecturerToAdd, Lecturer.Email, CancellationToken.None);
+        var result = await UserManager.CreateAsync(lecturerToAdd, Lecturer.PasswordHash);
         NavigationManager.NavigateTo("/users/lecturers");
     }
 
@@ -106,5 +129,14 @@
         }
 
         return newLecturerCode;
+    }
+
+    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    {
+        if (!UserManager.SupportsUserEmail)
+        {
+            throw new NotSupportedException("The default UI requires a user store with email support.");
+        }
+        return (IUserEmailStore<ApplicationUser>)UserStore;
     }
 }

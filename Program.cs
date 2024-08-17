@@ -69,6 +69,7 @@ namespace SIMS
                      }
                  };
              });
+            builder.Services.AddControllers();
 
             builder.Services.AddAuthorization(options =>
             {
@@ -118,6 +119,7 @@ namespace SIMS
 
             app.UseStaticFiles();
             app.UseAntiforgery();
+            app.MapControllers(); // Map API controllers
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();

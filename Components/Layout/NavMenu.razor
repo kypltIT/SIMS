@@ -170,9 +170,9 @@
 				</li>
 			</ul>
 
-			<ul>
+@* 			<ul>
 				<li class="relative px-6 py-3">
-					@* Highlight Track *@
+					@* Highlight Track
 					@if (IsActive("studentcourses"))
 					{
 						<span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
@@ -193,7 +193,7 @@
 						<span class="ml-4">Student Courses</span>
 					</a>
 				</li>
-			</ul>
+			</ul> *@
 
 
 			<ul>
@@ -237,9 +237,10 @@
 
 	private string activeLink;
 
-	private bool isStudent;
-	private bool isAdmin;
-	private bool isLecturer;
+	public static bool isStudent;
+	public static bool isAdmin;
+	public static bool isLecturer;
+	public static string? userId;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -250,7 +251,8 @@
 
 		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 		var user = authState.User;
-
+		userId = user.FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+				?? user.FindFirst(c => c.Type == "sub")?.Value;
 		// Check if the user is in the "Student" role
 		isStudent = user.Claims.Any(c => c.Type == "Role" && c.Value == "Student");
 		isAdmin = user.Claims.Any(c => c.Type == "Role" && c.Value == "Admin");
