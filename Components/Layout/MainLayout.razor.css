@@ -1,8 +1,7 @@
 /* Ensure the body takes full viewport height */
-html, body, article {
+html, body,  {
     height: 100%;
     margin: 0;
-    overflow: hidden; /* Hide scrollbar on the body */
 }
 article {
     height: 100%;

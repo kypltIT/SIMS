@@ -1,4 +1,5 @@
-﻿@page "/Account/ExternalLogin"
+﻿@layout RegisterLayout
+@page "/Account/ExternalLogin"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
@@ -6,6 +7,8 @@
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Components.Layout
 @using SIMS.Data
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -16,31 +19,120 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ExternalLogin> Logger
 
-<PageTitle>Register</PageTitle>
+<PageTitle>External Login</PageTitle>
 
 <StatusMessage Message="@message" />
-<h1>Register</h1>
-<h2>Associate your @ProviderDisplayName account.</h2>
-<hr />
 
-<div  class="alert alert-info">
-    You've successfully authenticated with <strong>@ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
-</div>
 
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="Input" OnValidSubmit="OnValidSubmitAsync" FormName="confirmation" method="post">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="email" placeholder="Please enter your email." />
-                <label for="email" class="form-label">Email</label>
-                <ValidationMessage For="() => Input.Email" />
+
+<div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
+    <div class="flex h-full max-w-xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-700">
+        <div class="flex flex-col overflow-y-auto">
+            <div class="flex-1 items-center justify-center p-6">
+                <div class="w-full">
+                    <div class="alert alert-info text-center text-xs ">
+                        You've successfully authenticated with <strong>@ProviderDisplayName</strong>.
+                        Please enter your details below and click the Register button to finish registering your account.
+                    </div>
+                    <h1 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-200 text-center">
+                        Student Information
+                    </h1>
+                    <div class="text-xs text-gray-700 dark:text-gray-200">
+                        This form must be completed for all new students who are registering in a BTEC FPT British College (BTEC FPT)
+                    </div>
+
+                    <EditForm Model="Input" OnValidSubmit="OnValidSubmitAsync" FormName="register">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" role="alert" />
+
+                        
+                        <!-- First Name -->
+                        <label class="block mt-4 text-sm">
+                            <div class="flex">
+                                <div class="mr-2 w-full">
+                                    <span class="text-gray-700 dark:text-gray-400">First Name</span>
+                                    <InputText @bind-Value="Input.FirstName"
+                                               class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                               placeholder="Jane" />
+                                    <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+                                </div>
+                                <div class="w-full">
+                                    <span class="text-gray-700 dark:text-gray-400">Last Name</span>
+                                    <InputText @bind-Value="Input.LastName"
+                                               class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                               placeholder="Doe" />
+                                    <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                                </div>
+                            </div>
+                        </label>
+
+                        <!-- Phone Number -->
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Phone Number</span>
+                            <InputText @bind-Value="Input.PhoneNumber"
+                                       class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                       placeholder="03** *** ***" />
+                            <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+                        </label>
+
+                        <!-- Email -->
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Email</span>
+                            <InputText @bind-Value="Input.Email"
+                                       class="w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                       placeholder="name@example.com" />
+                            <ValidationMessage For="() => Input.Email" class="text-danger" />
+                        </label>
+
+                        <!-- Password -->
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Password</span>
+                            <div class="relative">
+                                <input class="flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300 dark:hover:border-gray-500"
+                                       placeholder="***************" type="password" id="password-input" />
+                                <button type="button"
+                                        class="button show-hide-password absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-auto toggle-password">
+                                    <svg aria-hidden="true" class="svg-icon iconEyeOff dark:text-white" width="18" height="18"
+                                         viewBox="0 0 18 18">
+                                        <path d="m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </label>
+
+                        <!-- Confirm Password -->
+                        <label class="block mt-4 text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Confirm Password</span>
+                            <div class="relative">
+                                <input class="flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300 dark:hover:border-gray-500"
+                                       placeholder="***************" type="password" id="confirm-password-input" />
+                                <button type="button"
+                                        class="button show-hide-password absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-auto toggle-password">
+                                    <svg aria-hidden="true" class="svg-icon iconEyeOff dark:text-white" width="18" height="18"
+                                         viewBox="0 0 18 18">
+                                        <path d="m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </label>
+
+                        <!-- Register Button -->
+                        <button type="submit" class="w-full px-4 py-2 mt-6 text-sm font-medium leading-5 text-center text-white transition-colors duration-300 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                            Register
+                        </button>
+
+                        <!-- Back Button -->
+                        <a class="flex items-center justify-center w-12 h-12 mt-6 mx-auto bg-purple-600 rounded text-white transition-colors duration-300 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" href="/">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </a>
+                    </EditForm>
+                </div>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </EditForm>
+        </div>
     </div>
 </div>
 
@@ -71,13 +163,13 @@
     {
         if (RemoteError is not null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", $"Error from external provider: {RemoteError}", HttpContext);
+            RedirectManager.RedirectToWithStatus("Dashboard", $"Error from external provider: {RemoteError}", HttpContext);
         }
 
         var info = await SignInManager.GetExternalLoginInfoAsync();
         if (info is null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", "Error loading external login information.", HttpContext);
+            RedirectManager.RedirectToWithStatus("Dashboard", "Error loading external login information.", HttpContext);
         }
 
         externalLoginInfo = info;
@@ -92,7 +184,7 @@
 
             // We should only reach this page via the login callback, so redirect back to
             // the login page if we get here some other way.
-            RedirectManager.RedirectTo("Account/Login");
+            RedirectManager.RedirectTo("/");
         }
     }
 
@@ -115,7 +207,7 @@
         }
         else if (result.IsLockedOut)
         {
-            RedirectManager.RedirectTo("Account/Lockout");
+            RedirectManager.RedirectTo("Dashboard");
         }
 
         // If the user does not have an account, then ask the user to create an account.
@@ -125,50 +217,89 @@
         }
     }
 
+
     private async Task OnValidSubmitAsync()
     {
         var emailStore = GetEmailStore();
         var user = CreateUser();
 
-        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        // Generate the next student code and assign it
+        user.Code = await GenerateNextStudentCodeAsync();
+
+        // Set user properties
+        user.UserName = Input.Email;
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        user.FirstName = Input.FirstName;
+        user.LastName = Input.LastName;
+        user.PhoneNumber = Input.PhoneNumber;
 
-        var result = await UserManager.CreateAsync(user);
-        if (result.Succeeded)
+        // Check if the email already exists
+        var existingUser = await UserManager.FindByEmailAsync(Input.Email);
+        if (existingUser != null)
         {
-            result = await UserManager.AddLoginAsync(user, externalLoginInfo);
-            if (result.Succeeded)
-            {
-                Logger.LogInformation("User created an account using {Name} provider.", externalLoginInfo.LoginProvider);
-
-                var userId = await UserManager.GetUserIdAsync(user);
-                var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-                var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-                    NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
-                    new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
-                await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
-
-                // If account confirmation is required, we need to show the link if we don't have a real email sender
-                if (UserManager.Options.SignIn.RequireConfirmedAccount)
-                {
-                    RedirectManager.RedirectTo("Account/RegisterConfirmation", new() { ["email"] = Input.Email });
-                }
-
-                await SignInManager.SignInAsync(user, isPersistent: false, externalLoginInfo.LoginProvider);
-                RedirectManager.RedirectTo(ReturnUrl);
-            }
+            // If email already exists, redirect the user to the manage page
+            RedirectManager.RedirectTo("Account/Manage"); // Update URL as needed
+            return;
         }
 
-        message = $"Error: {string.Join(",", result.Errors.Select(error => error.Description))}";
+        // Create the user with password
+        var result = await UserManager.CreateAsync(user, Input.Password);
+        if (result.Succeeded)
+        {
+            // Sign in the user and redirect to the home page
+            await SignInManager.SignInAsync(user, isPersistent: false, externalLoginInfo.LoginProvider);
+            RedirectManager.RedirectTo("/dashboard"); // Redirect to the home page after successful registration
+        }
+        else
+        {
+            // Handle registration errors
+            message = $"Error: {string.Join(",", result.Errors.Select(error => error.Description))}";
+        }
     }
+
+    //sửa
+    private async Task<string> GenerateNextStudentCodeAsync()
+    {
+        // Retrieve the last student code from the database
+        var lastStudent = await UserManager.Users
+            .Where(u => u.Code.StartsWith("ST"))
+            .OrderByDescending(u => u.Code)
+            .FirstOrDefaultAsync();
+
+        string newStudentCode;
+        if (lastStudent == null)
+        {
+            // No student found, start with ST00001
+            newStudentCode = "ST00001";
+        }
+        else
+        {
+            // Extract the numeric part of the last student code
+            int lastCodeNumber = int.Parse(lastStudent.Code.Substring(2));
+            // Increment by 1
+            newStudentCode = $"ST{(lastCodeNumber + 1).ToString("D5")}";
+        }
+
+        return newStudentCode;
+    }
+
 
     private ApplicationUser CreateUser()
     {
         try
         {
-            return Activator.CreateInstance<ApplicationUser>();
+            return new ApplicationUser()
+                {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    PhoneNumber = Input.PhoneNumber,
+                    Email = Input.Email,
+                    Role = "Student",
+                    Status = "Active",
+                    IntialAdmissionCourse = "K1",
+
+                    // The Code will be assigned later in the RegisterUser method
+                };
         }
         catch
         {
@@ -189,7 +320,26 @@
     private sealed class InputModel
     {
         [Required]
+        public string FirstName { get; set; } = "";
+
+        [Required]
+        public string LastName { get; set; } = "";
+
+        [Required]
+        [Phone]
+        public string PhoneNumber { get; set; } = "";
+
+        [Required]
         [EmailAddress]
         public string Email { get; set; } = "";
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = "";
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; } = "";
     }
 }

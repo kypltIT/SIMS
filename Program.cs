@@ -15,6 +15,7 @@ namespace SIMS
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var services = builder.Services;
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
@@ -31,6 +32,13 @@ namespace SIMS
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
                 .AddIdentityCookies();
+            // ADD API Email
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+
+            });
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
