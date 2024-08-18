@@ -29,8 +29,8 @@
                     <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
                         Login
                     </h1>
-                    <StatusMessage Message="@errorMessage" />
-                    <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+                    <EditForm Model="Input" OnValidSubmit="LoginUser" FormName="loginForm">
+                        @* Mã chống giả mạo sẽ tự động được bao gồm *@
                         <DataAnnotationsValidator />
                         <ValidationSummary class="text-danger" role="alert" />
 
@@ -38,20 +38,24 @@
                         <label class="block text-sm">
                             <span class="text-gray-700 dark:text-gray-400">Email</span>
                             <div class="relative">
-                                <InputText @bind-Value="Input.Email" aria-required="true" class="form-control flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
-                                           placeholder="janedoe123@gmail.com" />
+                                <InputText @bind-Value="Input.Email"
+                                           class="flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300"
+                                           placeholder="janedoe123" />
+                                <button class="inset-y-0 right-0 absolute px-16 py-2 text-sm font-medium leading-5 text-white transition-colors bg-purple-600 border border-transparent opacity-20 cursor-not-allowed focus:outline-none">
+                                    gmail.com
+                                </button>
                                 <ValidationMessage For="() => Input.Email" class="text-danger" />
                             </div>
                         </label>
+
                         <!-- Password -->
                         <label class="block mt-4 text-sm">
                             <span class="text-gray-700 dark:text-gray-400">Password</span>
                             <div class="relative">
-                                <InputText @bind-Value="Input.Password" class="form-control flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300 dark:hover:border-gray-500"
-                                           placeholder="***************"
-                                           type="password"
-                                           id="password-input" />
-                                <button type="button" class="button show-hide-password absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-auto toggle-password" id="toggle-password">
+                                <InputText type="password" @bind-Value="Input.Password"
+                                           class="flex block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input hover:border-gray-500 duration-300 dark:hover:border-gray-500"
+                                           placeholder="***************" />
+                                <button type="button" class="button show-hide-password absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-auto">
                                     <svg aria-hidden="true" class="svg-icon iconEyeOff dark:text-white" width="18" height="18" viewBox="0 0 18 18">
                                         <path d="m5.02 9.44-2.22 2.2C1.63 10.25 1 9 1 9s3-6 8.06-6q1.13.01 2.12.38L9.5 5.03 9 5a4 4 0 0 0-3.98 4.44m2.03 3.05A4 4 0 0 0 13 9q-.01-1.1-.54-2l-1.51 1.54q.05.22.05.46a2 2 0 0 1-2.44 1.95zm7.11-7.22A15 15 0 0 1 17 9s-3 6-7.94 6c-1.31 0-2.48-.4-3.5-1l-1.97 2L2 14.41 14.59 2 16 3.41z"></path>
                                     </svg>
@@ -63,33 +67,39 @@
                         <!-- Remember me -->
                         <div class="flex mt-2 text-sm">
                             <label class="flex items-center dark:text-gray-400">
-                                <InputCheckbox type="checkbox" @bind-Value="Input.RememberMe"
-                                               class="darker-border-checkbox form-check-input text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" />
-                                <span class="ml-2">
-                                    Remember me
-                                </span>
+                                <InputCheckbox @bind-Value="Input.RememberMe"
+                                               class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" />
+                                <span class="ml-2">Remember me</span>
                             </label>
                         </div>
 
                         <!-- Forgot Password -->
                         <p class="mt-4">
-                            <a class="block text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                               href="Account/ForgotPassword">
+                            <a class="block text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline" href="Account/ForgotPassword">
                                 Forgot your password?
                             </a>
                         </p>
-
-                        <!-- Login button  -->
-                        <button type="submit" class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-300 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                            Log in
-                        </button>
+                        <p class="mt-4">
+                            <a class="block text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">
+                                Register as a new user
+                            </a>
+                        </p>
+                        <p class="mt-4">
+                            <a class="block text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline" href="Account/ResendEmailConfirmation">
+                                Resend email confirmation
+                            </a>
+                        </p>
+                        <!-- Login button -->
+                        <button type="submit" class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-300 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Log in</button>
                     </EditForm>
+
                     <!-- OR -->
                     <h1 class="block divider text-gray-500 text-sm">OR</h1>
 
                     <!-- Sign in with Google -->
-                    <ExternalLoginPicker />
-
+                    <section class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-300 border border-gray-300 rounded-lg dark:text-gray-400 active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+                        <ExternalLoginPicker />
+                    </section>
                 </div>
             </div>
         </div>
@@ -97,15 +107,11 @@
 
     <!-- Image -->
     <div class="block h-32 md:h-auto md:w-1/2 items-center pointer-events-none">
-        <img aria-hidden="true" class="object-cover dark:hidden pointer-events-none" src="../assets/img/login-office.png" style="display: block;
-      margin-left: auto;
-      margin-right: auto;
-      width: 70%;
-      pointer-events: none;"
-             alt="Office" />
+        <img aria-hidden="true" class="object-cover dark:hidden pointer-events-none" src="../assets/img/login-office.png" style="display: block; margin-left: auto; margin-right: auto; width: 70%; pointer-events: none;" alt="Office" />
         <h1 class="dark:text-white" style="text-align: center; font-weight: bold; font-size: 25px;">Student Information Management System</h1>
     </div>
 </div>
+
 
 @code {
     private string? errorMessage;

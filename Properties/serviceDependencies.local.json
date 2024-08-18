@@ -4,7 +4,7 @@
       "serviceConnectorResourceId": "",
       "secretStore": "LocalSecretsFile",
       "type": "mssql.onprem",
-      "connectionId": "ConnectionStrings:SIMS-Database"
+      "connectionId": "ConnectionStrings:SIMS_Ky"
     }
   }
 }

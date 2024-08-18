@@ -1,66 +1,104 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
-using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
+using SIMS.Data;
 using System;
 using System.Collections.Generic;
-using SIMS.Components.Account;
-
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SIMS.Components.Account
 {
-	internal sealed class IdentityRedirectManager
-	{
-		public const string StatusCookieName = "Identity.StatusMessage";
+    internal sealed class IdentityRedirectManager
+    {
+        public const string StatusCookieName = "Identity.StatusMessage";
 
-		private static readonly CookieBuilder StatusCookieBuilder = new()
-		{
-			SameSite = SameSiteMode.Strict,
-			HttpOnly = true,
-			IsEssential = true,
-			MaxAge = TimeSpan.FromSeconds(5),
-		};
+        private static readonly CookieBuilder StatusCookieBuilder = new()
+        {
+            SameSite = SameSiteMode.Strict,
+            HttpOnly = true,
+            IsEssential = true,
+            MaxAge = TimeSpan.FromSeconds(5),
+        };
 
-		private readonly NavigationManager navigationManager;
+        private readonly NavigationManager navigationManager;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-		public IdentityRedirectManager(NavigationManager navigationManager)
-		{
-			this.navigationManager = navigationManager;
-		}
+        public IdentityRedirectManager(NavigationManager navigationManager, IHttpContextAccessor httpContextAccessor)
+        {
+            this.navigationManager = navigationManager;
+            this.httpContextAccessor = httpContextAccessor;
+        }
 
-		[DoesNotReturn]
-		public void RedirectTo(string? uri)
-		{
-			uri ??= "";
-			if (!Uri.IsWellFormedUriString(uri, UriKind.Absolute))
-			{
-				uri = navigationManager.ToBaseRelativePath(uri);
-			}
-			navigationManager.NavigateTo(uri);
-			throw new InvalidOperationException($"{nameof(IdentityRedirectManager)} can only be used during static rendering.");
-		}
+        [DoesNotReturn]
+        public async Task<bool> SignInAsync(string userName, string password, bool rememberMe = false)
+        {
+            var context = httpContextAccessor.HttpContext;
+            var userManager = context.RequestServices.GetService(typeof(UserManager<ApplicationUser>)) as UserManager<ApplicationUser>;
+            var signInManager = context.RequestServices.GetService(typeof(SignInManager<ApplicationUser>)) as SignInManager<ApplicationUser>;
 
-		[DoesNotReturn]
-		public void RedirectTo(string uri, Dictionary<string, object?> queryParameters)
-		{
-			var uriWithoutQuery = navigationManager.ToAbsoluteUri(uri).GetLeftPart(UriPartial.Path);
-			var newUri = navigationManager.GetUriWithQueryParameters(uriWithoutQuery, queryParameters);
-			RedirectTo(newUri);
-		}
+            if (userManager == null || signInManager == null)
+                throw new InvalidOperationException("UserManager or SignInManager is not available.");
 
-		[DoesNotReturn]
-		public void RedirectToWithStatus(string uri, string message, HttpContext context)
-		{
-			context.Response.Cookies.Append(StatusCookieName, message, StatusCookieBuilder.Build(context));
-			RedirectTo(uri);
-		}
+            var user = await userManager.FindByNameAsync(userName);
+            if (user != null && await userManager.CheckPasswordAsync(user, password))
+            {
+                var result = await signInManager.PasswordSignInAsync(userName, password, rememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    // User authenticated successfully
+                    RedirectTo("Dashboard");
+                    return true;
+                }
+            }
 
-		private string CurrentPath => navigationManager.ToAbsoluteUri(navigationManager.Uri).GetLeftPart(UriPartial.Path);
+            // Authentication failed
+            RedirectTo("/Login");
+            return false;
+        }
 
-		[DoesNotReturn]
-		public void RedirectToCurrentPage() => RedirectTo(CurrentPath);
+        [DoesNotReturn]
+        public void RedirectTo(string? uri)
+        {
+            // Default to home if uri is null or empty
+            uri = string.IsNullOrEmpty(uri) ? "Dashboard" : uri;
 
-		[DoesNotReturn]
-		public void RedirectToCurrentPageWithStatus(string message, HttpContext context)
-			=> RedirectToWithStatus(CurrentPath, message, context);
-	}
+            // Ensure uri is well-formed and not relative
+            if (!Uri.IsWellFormedUriString(uri, UriKind.Relative))
+            {
+                uri = navigationManager.ToBaseRelativePath(uri);
+            }
+
+            // Navigate to the validated URI
+            navigationManager.NavigateTo(uri);
+            throw new InvalidOperationException($"{nameof(IdentityRedirectManager)} can only be used during static rendering.");
+        }
+
+        [DoesNotReturn]
+        public void RedirectTo(string uri, Dictionary<string, object?> queryParameters)
+        {
+            var absoluteUri = navigationManager.ToAbsoluteUri(uri);
+            var uriWithoutQuery = absoluteUri.GetLeftPart(UriPartial.Path);
+            var newUri = navigationManager.GetUriWithQueryParameters(uriWithoutQuery, queryParameters);
+            RedirectTo(newUri.ToString());
+        }
+
+        [DoesNotReturn]
+        public void RedirectToWithStatus(string uri, string message, HttpContext context)
+        {
+            context.Response.Cookies.Append(StatusCookieName, message, StatusCookieBuilder.Build(context));
+            RedirectTo(uri);
+        }
+
+        private string CurrentPath => navigationManager.ToAbsoluteUri(navigationManager.Uri).GetLeftPart(UriPartial.Path);
+
+        [DoesNotReturn]
+        public void RedirectToCurrentPage() => RedirectTo(CurrentPath);
+
+        [DoesNotReturn]
+        public void RedirectToCurrentPageWithStatus(string message, HttpContext context)
+            => RedirectToWithStatus(CurrentPath, message, context);
+    }
 }
