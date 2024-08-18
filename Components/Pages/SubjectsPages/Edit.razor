@@ -7,11 +7,11 @@
 
 <PageTitle>Edit</PageTitle>
 
+
 <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-    Edit Subjects
+    Edit Departments
 </h2>
-<hr />
-<hr />
+<hr class="mb-4" />
 @if (Subjects is null || Majors is null)
 {
     <p><em>Loading...</em></p>
@@ -44,16 +44,15 @@ else
                     <InputText id="code" @bind-Value="Subjects.Code" class="form-control" />
                     <ValidationMessage For="() => Subjects.Code" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    Save
+                </button> |
+                <a href="/subjects">Back to List</a>
+                |
             </EditForm>
         </div>
     </div>
 }
-
-<div>
-    <a href="/subjects">Back to List</a>
-</div>
-
 @code {
     [SupplyParameterFromQuery]
     public int Id { get; set; }

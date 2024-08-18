@@ -8,11 +8,14 @@
 
 <PageTitle>Inactivate Student</PageTitle>
 
-<h1>Inactivate/Activate Student</h1>
 
+
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200 text-center">
+    Inactivate/Activate Student
+</h2>
+<hr class="mb-4" />
 <h3>Are you sure you want to change the status of this student?</h3>
 <div>
-    <h4>Student</h4>
     <hr />
     @if (student is null)
     {
@@ -29,8 +32,12 @@
             <dd class="col-sm-10">@student.Status</dd>
         </dl>
         <EditForm method="post" Model="student" OnValidSubmit="ToggleStatus" FormName="toggleStatusForm" Enhance>
-            <button type="submit" class="btn btn-warning">Toggle Status</button>
-            <a href="/students">Back to List</a>
+           <div>
+            <button type="submit" class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+Toggle Status               </button> |
+            <a href="/users/students">Back to List</a>
+            |
+         </div>
         </EditForm>
     }
 </div>

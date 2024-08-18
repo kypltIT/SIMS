@@ -8,11 +8,12 @@
 @rendermode InteractiveServer
 <PageTitle>Assign Student into Course</PageTitle>
 
-<h1>Assign Student into Course</h1>
-
+<h1 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Assign Student into Course
+</h1>
 <div>
-    <h4>Courses</h4>
-    <hr />
+    <hr class="mb-2" style="border: 0; height: 2px; background-color: peru;" />
+
     @if (courses is null)
     {
         <p><em>Loading...</em></p>
@@ -37,18 +38,22 @@
                 </dl>
             </div>
             <div class="col-6">
-                <h4>Enroll student into course:</h4>
+                <h4 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200 text-center">Enroll student into course</h4>
                 <div class="form-group">
                     <label>Select Student</label>
+                    <hr/>
                     <select id="studentSelect" multiple class="form-control" style="width: 100%;"></select>
                 </div>
-                <button class="btn btn-primary" @onclick="EnrollStudents">Enroll</button>
+                <hr class="mb-2" />
+                <div class="flex justify-end">
+                    <button class="btn btn-danger btn-sm bg-purple-600" @onclick="EnrollStudents">Enroll</button>
+                </div>
 
             </div>
         </div>
     }
-    <hr />
     <h3>Lists of student enrolled</h3>
+    <hr class="mb-4" style="border: 0; height: 2px;   background-color: peru;" />
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -72,7 +77,7 @@
                         <td class="text-center">@student.Student.FirstName @student.Student.LastName</td>
                         <td class="text-center">@student.Student.Email</td>
                         <td class="text-center">
-                            <button class="btn btn-danger btn-sm" @onclick="() => RemoveStudent(student.StudentId)">Remove</button>
+                            <button class="btn btn-danger btn-sm bg-purple-600" @onclick="() => RemoveStudent(student.StudentId)">Remove</button>
                         </td>
                     </tr>
                     i++;

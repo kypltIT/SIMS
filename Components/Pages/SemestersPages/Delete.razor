@@ -11,12 +11,12 @@
 <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
     Deletes Semesters
 </h2>
-<hr />
+<hr class="mb-4" />
 
 <h3>Are you sure you want to delete this?</h3>
+
 <div>
-    <h4>Semesters</h4>
-    <hr />
+
     @if (semesters is null)
     {
         <p><em>Loading...</em></p>
@@ -40,8 +40,12 @@
             <dd class="col-sm-10">@semesters.Code</dd>
         </dl>
         <EditForm method="post" Model="semesters" OnValidSubmit="DeleteSemesters" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(semesters is null)">Delete</button> |
-            <a href="/semesters">Back to List</a>
+            <button type="submit" class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
+                    " disabled="@(semesters is null)">
+                Delete
+            </button> |
+            <a href="/Semesters">Back to List</a>
+            |
         </EditForm>
     }
 </div>

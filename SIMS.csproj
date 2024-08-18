@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Content Remove="Components\Layout\StudentLayout.razor" />
+    <Content Remove="Components\Pages\CoursesPages\Import.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,10 +32,16 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Components\Layout\StudentLayout.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\CoursesPages\Import.razor" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Components\Layout\StudentLayout.razor" />
+    <None Include="Components\Pages\CoursesPages\Import.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\CoursesPages\Import.razor" />
   </ItemGroup>
 
 </Project>
