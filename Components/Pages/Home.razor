@@ -32,11 +32,11 @@
 			</div>
 			<div>
 				<p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-					Total clients
+					Total users
 				</p>
 				<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-					6389
-				</p>
+					@Users.Count		
+					</p>
 			</div>
 		</div>
 		<!-- Card -->
@@ -48,29 +48,14 @@
 			</div>
 			<div>
 				<p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-					Account balance
+					Total courses
 				</p>
 				<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-					$ 46,760.89
+					@Courses.Count	
 				</p>
 			</div>
 		</div>
-		<!-- Card -->
-		<div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-			<div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
-				<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-					<path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
-				</svg>
-			</div>
-			<div>
-				<p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-					New sales
-				</p>
-				<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-					376
-				</p>
-			</div>
-		</div>
+
 		<!-- Card -->
 		<div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
 			<div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
@@ -83,13 +68,32 @@
 					Pending contacts
 				</p>
 				<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-					35
+					0
+				</p>
+			</div>
+		</div>
+
+		<!-- Card -->
+		<div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+			<div class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
+				<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+					<path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
+				</svg>
+			</div>
+			<div>
+				<p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+					Coming Soon
+				</p>
+				<p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+					0
 				</p>
 			</div>
 		</div>
 	</div>
 
-	<h3>List of Students Enrolled</h3>
+
+
+	<h3 class="mb-3 font-semibold text-center">List of Students</h3>
 	<table class="table table-bordered">
 		<thead>
 			<tr>
@@ -98,6 +102,7 @@
 				<th class="text-center">First Name</th>
 				<th class="text-center">Last Name</th>
 				<th class="text-center">Email</th>
+				<th class="text-center">Intial Admission Course</th>
 				<th class="text-center">Status</th>
 			</tr>
 		</thead>
@@ -113,6 +118,7 @@
 						<td class="text-center">@student.FirstName</td>
 						<td class="text-center">@student.LastName</td>
 						<td class="text-center">@student.Email</td>
+						<td class="text-center">@student.IntialAdmissionCourse</td>
 						<td class="text-center">@student.Status</td>
 					</tr>
 					i++;
@@ -237,6 +243,7 @@
 	private bool isAdmin;
 	private bool isLecturer;
 
+
 	public List<ApplicationUser> Users { get; set; } = new();
 
 	public List<StudentCourses> StudentCourses { get; set; } = new();
@@ -248,6 +255,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+
 		studentId = SIMS.Components.Layout.NavMenu.userId;
 
 
@@ -271,8 +279,19 @@
 										.ThenInclude(c => c.Lecturer)
 									.ToListAsync();
 
+		Users = await context.Users
+											.Where(sc => sc.Role == "Student")
+
+.ToListAsync();
+
+
+
+
 		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 		var user = authState.User;
+
+		int totalUsers = await context.Users.CountAsync();
+		int totalCourses = await context.Courses.CountAsync();
 
 		// Check if the user is in the "Student" role
 		isStudent = user.Claims.Any(c => c.Type == "Role" && c.Value == "Student");
