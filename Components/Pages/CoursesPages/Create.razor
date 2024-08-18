@@ -1,4 +1,4 @@
-﻿@page "/-courses/create"
+﻿ @page "/-courses/create"
 
 @using Microsoft.EntityFrameworkCore
 @using SIMS.Models
@@ -86,7 +86,7 @@
 	public List<Semesters> Semesters { get; set; } = new();
 	public List<Subjects> Subjects { get; set; } = new();
 	protected override async Task OnInitializedAsync()
-	{ 
+	{
 		using var context = DbFactory.CreateDbContext();
 		Lecturer = await context.ApplicationUser.ToListAsync();
 		Semesters = await context.Semesters.ToListAsync();

@@ -6,21 +6,27 @@
 @inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
 
 <PageTitle>Index</PageTitle>
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Subjects
+</h2>
+<hr class="mb-3" />
+<a class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
+    " href="/subjects/create">
+    Create new
+    <span class="ml-2" aria-hidden="true">+</span>
+</a>
 
-<h1>Index</h1>
-
-<p>
-    <a href="subjects/create">Create New</a>
-</p>
-
-<QuickGrid Class="table" Items="DbFactory.CreateDbContext().Subjects">
+<QuickGrid Class="table" Items="DbFactory.CreateDbContext().Subjects.Include(m=>m.Major)">
     <PropertyColumn Property="subjects => subjects.Name" />
-    <PropertyColumn Property="subjects => subjects.MajorId" />
+    <PropertyColumn Property="subjects => subjects.Major.Name" Title="Major" />
     <PropertyColumn Property="subjects => subjects.Code" />
 
+
     <TemplateColumn Context="subjects">
-        <a href="@($"subjects/edit?id={subjects.Id}")">Edit</a> |
-        <a href="@($"subjects/details?id={subjects.Id}")">Details</a> |
-        <a href="@($"subjects/delete?id={subjects.Id}")">Delete</a>
+        <div style="text-align: right;">
+            <a href="@($"subjects/edit?id={subjects.Id}")"><i class="fa-solid fa-pen-to-square"></i></a>
+            <a href="/subjects"><i class="fa-solid fa-circle-info"></i></a>
+            <a href="@($"subjects/delete?id={subjects.Id}")"><i class="fa-solid fa-trash"></i></a>
+        </div>
     </TemplateColumn>
 </QuickGrid>

@@ -7,9 +7,9 @@
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
-
-<h4>Departments</h4>
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Create new  Departments
+</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,10 +17,10 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="name" class="form-label">Name:</label> 
-                <InputText id="name" @bind-Value="Departments.Name" class="form-control" /> 
-                <ValidationMessage For="() => Departments.Name" class="text-danger" /> 
-            </div>        
+                <label for="name" class="form-label">Name:</label>
+                <InputText id="name" @bind-Value="Departments.Name" class="form-control" />
+                <ValidationMessage For="() => Departments.Name" class="text-danger" />
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>

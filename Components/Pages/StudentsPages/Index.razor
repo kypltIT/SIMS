@@ -9,8 +9,9 @@
 
 <PageTitle>Manage Students</PageTitle>
 
-<h1>Manage Students</h1>
-
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200 text-center">
+    Manage Students
+</h2>
 
 <QuickGrid Class="table"
            Items='@(DbFactory.CreateDbContext().ApplicationUser.Where(s => s.Role.Equals("Student")))'>

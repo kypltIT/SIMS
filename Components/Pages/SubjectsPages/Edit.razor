@@ -7,11 +7,12 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
-
-<h4>Subjects</h4>
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Edit Subjects
+</h2>
 <hr />
-@if (Subjects is null)
+<hr />
+@if (Subjects is null || Majors is null)
 {
     <p><em>Loading...</em></p>
 }
@@ -29,12 +30,17 @@ else
                     <ValidationMessage For="() => Subjects.Name" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="majorid" class="form-label">MajorId:</label>
-                    <InputNumber id="majorid" @bind-Value="Subjects.MajorId" class="form-control" />
+                    <label for="major" class="form-label">Major:</label>
+                    <InputSelect id="major" @bind-Value="Subjects.MajorId" class="form-control">
+                        @foreach (var major in Majors)
+                        {
+                            <option value="@major.Id">@major.Name</option>
+                        }
+                    </InputSelect>
                     <ValidationMessage For="() => Subjects.MajorId" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="code" class="form-label">Code:</label>
+                    <label for="code" class="form-label">Code :</label>
                     <InputText id="code" @bind-Value="Subjects.Code" class="form-control" />
                     <ValidationMessage For="() => Subjects.Code" class="text-danger" />
                 </div>
@@ -55,6 +61,8 @@ else
     [SupplyParameterFromForm]
     public Subjects? Subjects { get; set; }
 
+    public List<Majors>? Majors { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
@@ -64,10 +72,10 @@ else
         {
             NavigationManager.NavigateTo("notfound");
         }
+
+        Majors = await context.Majors.ToListAsync();
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateSubjects()
     {
         using var context = DbFactory.CreateDbContext();
