@@ -24,21 +24,20 @@
             <div class="mb-3">
                 <label for="majorid" class="form-label">Major :</label>
                 <InputSelect id="majorid" @bind-Value="Subjects.MajorId" class="form-control">
-                    @foreach (var subject in Majors)
+                    @foreach (var major in Majors)
                     {
-                        <option value="@subject.Id">@subject.Name</option>
+                        <option value="@major.Id">@major.Name</option>
                     }
-
-                    <ValidationMessage For="() => Subjects.MajorId" class="text-danger" />
                 </InputSelect>
+                <ValidationMessage For="() => Subjects.MajorId" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="name" class="form-label">Code :</label>
-                <InputText id="name" @bind-Value="Subjects.Code" class="form-control" />
+                <label for="code" class="form-label">Code :</label>
+                <InputText id="code" @bind-Value="Subjects.Code" class="form-control" />
                 <ValidationMessage For="() => Subjects.Code" class="text-danger" />
             </div>
-            <button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
-    " href="/departments/create">
+            <button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                    type="submit">
                 Create new
             </button> |
             <a href="/subjects">Back to List</a>
@@ -52,12 +51,13 @@
     [SupplyParameterFromForm]
     public Subjects Subjects { get; set; } = new();
     public List<Majors> Majors { get; set; } = new();
+
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
         Majors = await context.Majors.ToListAsync();
     }
-    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+
     public async Task AddSubjects()
     {
         using var context = DbFactory.CreateDbContext();

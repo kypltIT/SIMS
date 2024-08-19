@@ -1,106 +1,103 @@
-﻿ @page "/-courses/create"
+﻿@page "/-courses/create"
 
 @using Microsoft.EntityFrameworkCore
 @using SIMS.Models
 @using SIMS.Data
-@using SIMS.Data
-@using SIMS.Models
 @inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
 <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-	Create Courses
+    Create Courses
 </h2>
 <hr class="mb-4">
 <div class="row">
-	<div class="col-md-4">
-		<EditForm method="post" Model="Courses" OnValidSubmit="AddCourses" FormName="create" Enhance>
-			<DataAnnotationsValidator />
-			<ValidationSummary class="text-danger" />
-			<div class="mb-3">
-				<label for="name" class="form-label">Name:</label>
-				<InputText id="name" @bind-Value="Courses.Name" class="form-control" />
-				<ValidationMessage For="() => Courses.Name" class="text-danger" />
-			</div>
-			<div class="mb-3">
-				<label for="code" class="form-label">Code:</label>
-				<InputText id="code" @bind-Value="Courses.Code" class="form-control" />
-				<ValidationMessage For="() => Courses.Code" class="text-danger" />
-			</div>
-			<div class="mb-3">
-				<label for="startdate" class="form-label">StartDate:</label>
-				<InputDate id="startdate" @bind-Value="Courses.StartDate" class="form-control" />
-				<ValidationMessage For="() => Courses.StartDate" class="text-danger" />
-			</div>
-			<div class="mb-3">
-				<label for="enddate" class="form-label">EndDate:</label>
-				<InputDate id="enddate" @bind-Value="Courses.EndDate" class="form-control" />
-				<ValidationMessage For="() => Courses.EndDate" class="text-danger" />
-			</div>
-			<div class="mb-3">
-				<label for="semesterid" class="form-label">Semester:</label>
-				<InputSelect id="semesterid" @bind-Value="Courses.SemesterId" class="form-control">
-					@foreach (var semester in Semesters)
-					{
-						<option value="@semester.Id">@semester.Name</option>
-					}
-				</InputSelect>
-				<ValidationMessage For="() => Courses.SemesterId" class="text-danger" />
-			</div>
+    <div class="col-md-4">
+        <EditForm method="post" Model="Courses" OnValidSubmit="AddCourses" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <InputText id="name" @bind-Value="Courses.Name" class="form-control" />
+                <ValidationMessage For="() => Courses.Name" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="code" class="form-label">Code:</label>
+                <InputText id="code" @bind-Value="Courses.Code" class="form-control" />
+                <ValidationMessage For="() => Courses.Code" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="startdate" class="form-label">StartDate:</label>
+                <InputDate id="startdate" @bind-Value="Courses.StartDate" class="form-control" />
+                <ValidationMessage For="() => Courses.StartDate" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="enddate" class="form-label">EndDate:</label>
+                <InputDate id="enddate" @bind-Value="Courses.EndDate" class="form-control" />
+                <ValidationMessage For="() => Courses.EndDate" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="semesterid" class="form-label">Semester:</label>
+                <InputSelect id="semesterid" @bind-Value="Courses.SemesterId" class="form-control">
+                    @foreach (var semester in Semesters)
+                    {
+                        <option value="@semester.Id">@semester.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Courses.SemesterId" class="text-danger" />
+            </div>
 
-			<div class="mb-3">
-				<label for="lectureid" class="form-label"> Lecture:</label>
-				<InputSelect id="lectureid" @bind-Value="Courses.LecturerId" class="form-control">
-					@foreach (var lecture in Lecturer)
-					{
-						<option value="@lecture.Id">@lecture.FirstName @lecture.LastName</option>
-					}
-				</InputSelect>
-				<ValidationMessage For="() => Courses.LecturerId" class="text-danger" />
-			</div>
+            <div class="mb-3">
+                <label for="lectureid" class="form-label"> Lecture:</label>
+                <InputSelect id="lectureid" @bind-Value="Courses.LecturerId" class="form-control">
+                    @foreach (var lecture in Lecturer)
+                    {
+                        <option value="@lecture.Id">@lecture.FirstName @lecture.LastName</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Courses.LecturerId" class="text-danger" />
+            </div>
 
-			<div class="mb-3">
-				<label for="subjectid" class="form-label">Subject:</label>
-				<InputSelect id="subjectid" @bind-Value="Courses.SubjectId" class="form-control">
-					@foreach (var subject in Subjects)
-					{
-						<option value="@subject.Id">@subject.Name</option>
-					}
-				</InputSelect>
-				<ValidationMessage For="() => Courses.SubjectId" class="text-danger" />
-			</div>
-			<button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
-	" href="/-courses/create">
-				Create new
-			</button> |
-			<a href="/-courses">Back to List</a>
-			|
-		</EditForm>
-	</div>
+            <div class="mb-3">
+                <label for="subjectid" class="form-label">Subject:</label>
+                <InputSelect id="subjectid" @bind-Value="Courses.SubjectId" class="form-control">
+                    @foreach (var subject in Subjects)
+                    {
+                        <option value="@subject.Id">@subject.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Courses.SubjectId" class="text-danger" />
+            </div>
+            <button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                    type="submit">
+                Create new
+            </button> |
+            <a href="/-courses">Back to List</a>
+            |
+        </EditForm>
+    </div>
 </div>
 
-
 @code {
+    [SupplyParameterFromForm]
+    public Courses Courses { get; set; } = new();
+    public List<ApplicationUser> Lecturer { get; set; } = new();
+    public List<Semesters> Semesters { get; set; } = new();
+    public List<Subjects> Subjects { get; set; } = new();
 
-	[SupplyParameterFromForm]
-	public Courses Courses { get; set; } = new();
-	public List<ApplicationUser> Lecturer { get; set; } = new();
-	public List<Semesters> Semesters { get; set; } = new();
-	public List<Subjects> Subjects { get; set; } = new();
-	protected override async Task OnInitializedAsync()
-	{
-		using var context = DbFactory.CreateDbContext();
-		Lecturer = await context.ApplicationUser.ToListAsync();
-		Semesters = await context.Semesters.ToListAsync();
-		Subjects = await context.Subjects.ToListAsync();
-		Courses.Status = "Active";
-	}
-	// To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-	public async Task AddCourses()
-	{
-		using var context = DbFactory.CreateDbContext();
-		context.Courses.Add(Courses);
-		await context.SaveChangesAsync();
-		NavigationManager.NavigateTo("/-courses");
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Lecturer = await context.ApplicationUser.ToListAsync();
+        Semesters = await context.Semesters.ToListAsync();
+        Subjects = await context.Subjects.ToListAsync();
+        Courses.Status = "Active";
+    }
+
+    public async Task AddCourses()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Courses.Add(Courses);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/-courses");
+    }
 }
