@@ -1,7 +1,111 @@
 ﻿@page "/users/lecturers/edit"
 
-<h3>Edit</h3>
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Data
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit Lecturer</PageTitle>
+
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200 text-center">
+    Edit Lecturer Information
+</h2>
+<hr class="mb-4" />
+
+@if (Lecturer is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm method="post" Model="Lecturer" OnValidSubmit="UpdateLecturer" FormName="Edit" Enhance>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <input type="hidden" name="Lecturer.Id" value="@Lecturer.Id" />
+
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name:</label>
+            <InputText id="firstName" @bind-Value="Lecturer.FirstName" class="form-control" />
+            <ValidationMessage For="() => Lecturer.FirstName" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name:</label>
+            <InputText id="lastName" @bind-Value="Lecturer.LastName" class="form-control" />
+            <ValidationMessage For="() => Lecturer.LastName" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Phone Number:</label>
+            <InputText id="phoneNumber" @bind-Value="Lecturer.PhoneNumber" class="form-control" />
+            <ValidationMessage For="() => Lecturer.PhoneNumber" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <InputText id="email" @bind-Value="Lecturer.Email" class="form-control" />
+            <ValidationMessage For="() => Lecturer.Email" class="text-danger" />
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status:</label>
+            <InputText id="status" @bind-Value="Lecturer.Status" class="form-control" />
+            <ValidationMessage For="() => Lecturer.Status" class="text-danger" />
+        </div>
+
+        <div>
+            <button type="submit" class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                Save
+            </button> |
+            <a href="/users/lecturers">Back to List</a>
+            |
+        </div>
+
+    </EditForm>
+}
 
 @code {
+    [SupplyParameterFromQuery]
+    public string Id { get; set; }
 
+    private ApplicationUser? Lecturer { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Lecturer ??= await context.ApplicationUser.FirstOrDefaultAsync(u => u.Id == Id);
+
+        if (Lecturer is null)
+        {
+            NavigationManager.NavigateTo("/notfound");
+        }
+    }
+
+    public async Task UpdateLecturer()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Lecturer!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!LecturerExists(Lecturer!.Id))
+            {
+                NavigationManager.NavigateTo("/notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/users/lecturers");
+    }
+
+    bool LecturerExists(string id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.ApplicationUser.Any(e => e.Id == id);
+    }
 }

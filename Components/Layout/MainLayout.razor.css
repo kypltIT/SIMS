@@ -3,11 +3,6 @@ html, body,  {
     height: 100%;
     margin: 0;
 }
-article {
-    height: 100%;
-    margin: 0;
-    overflow: hidden
-}
 
 .page {
     position: relative;

@@ -1,5 +1,4 @@
 ﻿@page "/-courses/grade"
-@inherits LayoutComponentBase
 @implements IDisposable
 
 @using Microsoft.EntityFrameworkCore
@@ -7,15 +6,17 @@
 @inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
-<PageTitle>Add Grades</PageTitle>
 
-<h1>Add Grades</h1>
+<main class="h-full">
+<h1 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Add Grade
+</h1>
+<hr class="mb-2" style="" />
 @if (showNotification)
 {
-    <div class="alert alert-success mt-3">Grades and Notes have been successfully saved!</div>
+    <div class="alert alert-success font-semmibold mt-3">Grades and Notes have been successfully saved!</div>
 }
 <div>
-    <hr />
     @if (courses is null)
     {
         <p><em>Loading...</em></p>
@@ -47,7 +48,7 @@
         </div>
     }
     <hr />
-    <h3>List of Students Enrolled</h3>
+    <h3 class="my-3">List of Students Enrolled</h3>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -88,10 +89,10 @@
             }
         </tbody>
     </table>
-    <button class="btn btn-primary mt-3" @onclick="SaveGradesAndNotes">Save Grades and Notes</button>
+    <button class="btn btn-primary mt-3 bg-purple-600" @onclick="SaveGradesAndNotes">Save Grades and Notes</button>
 
 </div>
-
+</main>
 @code {
     private string? currentUrl;
 

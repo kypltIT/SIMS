@@ -16,12 +16,10 @@
 @using Microsoft.AspNetCore.Authorization
 @inject UserManager<SIMS.Data.ApplicationUser> UserManager
 
-<PageTitle>Create Lecturer</PageTitle>
-
-<h1>Create Lecturer</h1>
-
-<h4>Lecturers</h4>
-<hr />
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Create Lecturer
+</h2>
+<hr class="mb-4" />
 <div class="row">
     <div class="col-md-4">
         <EditForm method="post" Model="Lecturer" OnValidSubmit="AddLecturer" FormName="create" Enhance>
@@ -52,14 +50,17 @@
                 <InputText id="password" @bind-Value="Lecturer.PasswordHash" class="form-control" />
                 <ValidationMessage For="() => Lecturer.PasswordHash" class="text-danger" />
             </div>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
+    " href="/departments/create">
+                Create new
+            </button> |
+            <a href="/departments">Back to List</a>
+            |
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/users/lecturers">Back to List</a>
-</div>
+
 
 @code {
     [SupplyParameterFromForm]

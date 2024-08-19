@@ -21,7 +21,7 @@
                 <ValidationMessage For="() => Majors.Name" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="departmentid" class="form-label">DepartmentId :</label>
+                <label for="departmentid" class="form-label">Department :</label>
                 <InputSelect id="departmentid" @bind-Value="Majors.DepartmentId" class="form-control">
                     @foreach (var department in Departments)
                     {
