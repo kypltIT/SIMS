@@ -7,9 +7,8 @@
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
 <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-    Create new Semesters
+    Create Semesters
 </h2>
 <hr />
 <div class="row">
@@ -37,14 +36,16 @@
                 <InputText id="code" @bind-Value="Semesters.Code" class="form-control" />
                 <ValidationMessage For="() => Semesters.Code" class="text-danger" />
             </div>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
+    " href="/semesters/create">
+                Create new
+            </button> |
+            <a href="/semesters">Back to List</a>
+            |
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/semesters">Back to List</a>
-</div>
 
 @code {
 

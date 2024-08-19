@@ -12,7 +12,6 @@
 </h2>
 <hr class="mb-4" />
 <div>
-    <hr />
     @if (subjects is null)
     {
         <p><em>Loading...</em></p>
@@ -21,8 +20,8 @@
         <dl class="row">
             <dt class="col-sm-2">Name</dt>
             <dd class="col-sm-10">@subjects.Name</dd>
-            <dt class="col-sm-2">MajorId</dt>
-            <dd class="col-sm-10">@subjects.MajorId</dd>
+            <dt class="col-sm-2">Major</dt>
+            <dd class="col-sm-10">@subjects.Major.Name</dd>
             <dt class="col-sm-2">Code</dt>
             <dd class="col-sm-10">@subjects.Code</dd>
         </dl>
@@ -46,7 +45,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        subjects = await context.Subjects.FirstOrDefaultAsync(m => m.Id == Id);
+        subjects = await context.Subjects.Include(m=>m.Major).FirstOrDefaultAsync(m => m.Id == Id);
 
         if (subjects is null)
         {

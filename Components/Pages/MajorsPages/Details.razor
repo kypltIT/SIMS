@@ -22,12 +22,8 @@
         <dl class="row">
             <dt class="col-sm-2">Name</dt>
             <dd class="col-sm-10">@majors.Name</dd>
-            <dt class="col-sm-2">DepartmentId</dt>
-            <dd class="col-sm-10">@majors.DepartmentId</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Name</dt>
-            <dd class="col-sm-10">@majors.Name</dd>
+            <dt class="col-sm-2">Department</dt>
+            <dd class="col-sm-10">@majors.Department.Name</dd>
         </dl>
         <div class="mt-3">
             <a class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" href="@($"/departments/edit?id={majors.Id}")">Edit</a> |
@@ -46,7 +42,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        majors = await context.Majors.FirstOrDefaultAsync(m => m.Id == Id);
+        majors = await context.Majors.Include(d=>d.Department).FirstOrDefaultAsync(m => m.Id == Id);
 
         if (majors is null)
         {
