@@ -9,7 +9,9 @@
 
 <h1>Create</h1>
 
-<h4>Majors</h4>
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Create new Majors 
+</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,29 +19,44 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="name" class="form-label">Name:</label> 
-                <InputText id="name" @bind-Value="Majors.Name" class="form-control" /> 
-                <ValidationMessage For="() => Majors.Name" class="text-danger" /> 
-            </div>        
+                <label for="name" class="form-label">Name :</label>
+                <InputText id="name" @bind-Value="Majors.Name" class="form-control" />
+                <ValidationMessage For="() => Majors.Name" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="departmentid" class="form-label">DepartmentId:</label> 
-                <InputNumber id="departmentid" @bind-Value="Majors.DepartmentId" class="form-control" /> 
-                <ValidationMessage For="() => Majors.DepartmentId" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="departmentid" class="form-label">DepartmentId :</label>
+                <InputSelect id="departmentid" @bind-Value="Majors.DepartmentId" class="form-control">
+                    @foreach (var department in Departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+
+                    <ValidationMessage For="() => Majors.DepartmentId" class="text-danger" />
+                </InputSelect>
+            </div>
+
+            <button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
+    " href="/majors/create">
+                Create new
+            </button> |
+            <a href="/majors">Back to List</a>
+            |
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/majors">Back to List</a>
-</div>
+
 
 @code {
 
     [SupplyParameterFromForm]
     public Majors Majors { get; set; } = new();
-
+    public List<Departments> Departments { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Departments = await context.Departments.ToListAsync();
+    }
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddMajors()
     {

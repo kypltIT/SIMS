@@ -7,11 +7,12 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
-
-<h4>Majors</h4>
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Edit Majors
+</h2>
 <hr />
-@if (Majors is null)
+<hr />
+@if (Majors is null || Departments is null)
 {
     <p><em>Loading...</em></p>
 }
@@ -29,19 +30,32 @@ else
                     <ValidationMessage For="() => Majors.Name" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="departmentid" class="form-label">DepartmentId:</label>
-                    <InputNumber id="departmentid" @bind-Value="Majors.DepartmentId" class="form-control" />
+                    <label for="department" class="form-label">Department:</label>
+                    <InputSelect id="department" @bind-Value="Majors.DepartmentId" class="form-control">
+                        @foreach (var department in Departments)
+                        {
+                            <option value="@department.Id">@department.Name</option>
+                        }
+                    </InputSelect>
                     <ValidationMessage For="() => Majors.DepartmentId" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                 <input type="hidden" name="Departments.Id" value="@Majors.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Majors.Name" class="form-control" />
+                    <ValidationMessage For="() => Majors.Name" class="text-danger" />
+                </div>
+                <div class="mt-3">
+                <button type="submit" class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+Save                </button> |
+                    <a href="/majors">Back to List</a>
+                    |
+                </div>
             </EditForm>
         </div>
     </div>
 }
 
-<div>
-    <a href="/majors">Back to List</a>
-</div>
 
 @code {
     [SupplyParameterFromQuery]
@@ -49,6 +63,8 @@ else
 
     [SupplyParameterFromForm]
     public Majors? Majors { get; set; }
+
+    public List<Departments>? Departments { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,10 +75,10 @@ else
         {
             NavigationManager.NavigateTo("notfound");
         }
+
+        Departments = await context.Departments.ToListAsync();
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateMajors()
     {
         using var context = DbFactory.CreateDbContext();

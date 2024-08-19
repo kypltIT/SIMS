@@ -7,44 +7,51 @@
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
-
-<h4>Subjects</h4>
-<hr />
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Create Subjects
+</h2>
+<hr class="mb-4" />
 <div class="row">
     <div class="col-md-4">
         <EditForm method="post" Model="Subjects" OnValidSubmit="AddSubjects" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="name" class="form-label">Name:</label> 
-                <InputText id="name" @bind-Value="Subjects.Name" class="form-control" /> 
-                <ValidationMessage For="() => Subjects.Name" class="text-danger" /> 
-            </div>        
+                <label for="name" class="form-label">Name :</label>
+                <InputText id="name" @bind-Value="Subjects.Name" class="form-control" />
+                <ValidationMessage For="() => Subjects.Name" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="majorid" class="form-label">MajorId:</label> 
-                <InputNumber id="majorid" @bind-Value="Subjects.MajorId" class="form-control" /> 
-                <ValidationMessage For="() => Subjects.MajorId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="code" class="form-label">Code:</label> 
-                <InputText id="code" @bind-Value="Subjects.Code" class="form-control" /> 
-                <ValidationMessage For="() => Subjects.Code" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="majorid" class="form-label">Major :</label>
+                <InputSelect id="majorid" @bind-Value="Subjects.MajorId" class="form-control">
+                    @foreach (var subject in Majors)
+                    {
+                        <option value="@subject.Id">@subject.Name</option>
+                    }
+
+                    <ValidationMessage For="() => Subjects.MajorId" class="text-danger" />
+                </InputSelect>
+            </div>
+            <button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
+    " href="/departments/create">
+                Create new
+            </button> |
+            <a href="/subjects">Back to List</a>
+            |
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/subjects">Back to List</a>
 </div>
 
 @code {
 
     [SupplyParameterFromForm]
     public Subjects Subjects { get; set; } = new();
-
+    public List<Majors> Majors { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Majors = await context.Majors.ToListAsync();
+    }
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddSubjects()
     {

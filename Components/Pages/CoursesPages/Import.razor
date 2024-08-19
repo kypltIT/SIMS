@@ -1,0 +1,89 @@
+﻿@page "/-courses/import"
+@using Microsoft.EntityFrameworkCore
+@using SIMS.Models
+@inject IDbContextFactory<SIMS.Data.ApplicationDbContext> DbFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Courses</PageTitle>
+
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Courses
+</h2>
+<hr class="mb-3" />
+<a class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+    href="-courses/create">
+    Create new
+    <span class="ml-2" aria-hidden="true">+</span>
+</a>
+
+<!-- Nút tải lên tệp -->
+<input type="file" @onchange="OnFileUpload" />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Course Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Semester</th>
+            <th>Lecturer</th>
+            <th>Subject</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Courses)
+        {
+            <tr>
+                <td>@course.Name</td>
+                <td>@course.StartDate.ToShortDateString()</td>
+                <td>@course.EndDate.ToShortDateString()</td>
+                <td>@course.Semester.Name</td>
+                <td>@course.Lecturer.FirstName @course.Lecturer.LastName</td>
+                <td>@course.Subject.Name</td>
+                <td>
+                    @if (IsAdmin)
+                    {
+                        <a href="@($"-courses/edit?id={course.Id}")"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="@($"-courses/details?id={course.Id}")"><i class="fa-solid fa-circle-info"></i></a>
+                        <a href="@($"-courses/delete?id={course.Id}")"><i class="fa-solid fa-trash"></i></a>
+                        <br />
+                    }
+                    <a href="@($"-courses/assign?id={course.Id}")">Assign students</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Courses> Courses { get; set; } = new List<Courses>();
+    private bool IsAdmin { get; set; }
+
+    // Phương thức xử lý khi tải lên tệp
+    private async Task OnFileUpload(ChangeEventArgs e)
+    {
+        var files = (e.Value as IEnumerable<IBrowserFile>)?.ToList();
+
+        if (files != null && files.Count > 0)
+        {
+            var file = files[0];
+            using var stream = file.OpenReadStream();
+            using var reader = new StreamReader(stream);
+            var content = await reader.ReadToEndAsync();
+
+            var newCourses = ParseCsvContent(content);
+            await AddCoursesToDatabase(newCourses);
+        }
+    }
+
+    // Phương thức phân tích nội dung CSV
+    private List<Courses> ParseCsvContent(string content)
+    {
+        var newCourses = new List<Courses>();
+
+        var lines = content.Split(Environment.NewLine);
+        foreach (var line in lines)
+
+ }
+}
