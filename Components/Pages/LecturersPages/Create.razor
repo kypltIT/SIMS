@@ -44,7 +44,7 @@
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email:</label>
-                <InputText id="email" @bind-Value="Lecturer.Email" class="form-control" />
+                <InputText id="email" @bind-Value="Lecturer.Email" />
                 <ValidationMessage For="() => Lecturer.Email" class="text-danger" />
             </div>
             <div class="mb-3">
@@ -99,8 +99,6 @@
 
             };
         await UserStore.SetUserNameAsync(lecturerToAdd, Lecturer.Email, CancellationToken.None);
-        var emailStore = GetEmailStore();
-        await emailStore.SetEmailAsync(lecturerToAdd, Lecturer.Email, CancellationToken.None);
         var result = await UserManager.CreateAsync(lecturerToAdd, Lecturer.PasswordHash);
         NavigationManager.NavigateTo("/users/lecturers");
     }
@@ -131,12 +129,4 @@
         return newLecturerCode;
     }
 
-    private IUserEmailStore<ApplicationUser> GetEmailStore()
-    {
-        if (!UserManager.SupportsUserEmail)
-        {
-            throw new NotSupportedException("The default UI requires a user store with email support.");
-        }
-        return (IUserEmailStore<ApplicationUser>)UserStore;
-    }
 }
