@@ -49,8 +49,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="lectureid" class="form-label">Lecture:</label>
-                <InputSelect id="lectureid" @bind-Value="Courses.LecturerId" class="form-control">
+                <label for="lecturerid" class="form-label">Lecture:</label>
+                <InputSelect id="lecturerid" @bind-Value="Courses.LecturerId" class="form-control">
                     @foreach (var lecture in Lecturer)
                     {
                         <option value="@lecture.Id">@lecture.FirstName @lecture.LastName</option>
@@ -70,7 +70,7 @@
                 <ValidationMessage For="() => Courses.SubjectId" class="text-danger" />
             </div>
             <button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
-    " href="/departments/create">
+    " href="/departments/create" type="submit">
                 Create new
             </button> |
             <a href="/-courses">Back to List</a>

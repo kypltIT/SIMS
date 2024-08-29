@@ -33,12 +33,12 @@
                 </InputSelect>
             </div>
             <div class="mb-3">
-                <label for="name" class="form-label">Code :</label>
-                <InputText id="name" @bind-Value="Subjects.Code" class="form-control" />
+                <label for="code" class="form-label">Code :</label>
+                <InputText id="code" @bind-Value="Subjects.Code" class="form-control" />
                 <ValidationMessage For="() => Subjects.Code" class="text-danger" />
             </div>
             <button class="items-center px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple
-    " href="/departments/create">
+    " href="/departments/create" type="submit">
                 Create new
             </button> |
             <a href="/subjects">Back to List</a>

@@ -239,23 +239,15 @@
 } 
 @code {
 	private string? currentUrl;
-
 	private string activeLink;
-
 	private bool isStudent;
 	private bool isAdmin;
 	private bool isLecturer;
-
-
 	public List<ApplicationUser> Users { get; set; } = new();
-
 	public List<StudentCourses> StudentCourses { get; set; } = new();
 	string? studentId;
-
-
 	private List<Courses> Courses { get; set; } = new List<Courses>();
 	private bool IsAdmin { get; set; }
-
 	protected override async Task OnInitializedAsync()
 	{
 
@@ -309,10 +301,6 @@
 		activeLink = NavigationManager.Uri;
 		NavigationManager.LocationChanged += OnLocationChanged;
 	}
-
-
-
-
 	private void SetActive(string link)
 	{
 		activeLink = link;
